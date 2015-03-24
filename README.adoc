@@ -1,0 +1,30 @@
+= hawkular-rest-test
+:source-language: java
+
+== Quickstart
+To build project,
+
+  mvn clean install -DskipTests
+
+To create Eclipse project
+
+  mvn eclipse:eclipse
+
+To run test cases,
+
+  mvn test
+
+Run test cases with your custom file
+
+ mvn test -Dlog4j.file=/path/to/log4j-properties-file \
+ -Dhawkular.file=/path/to/hawkular-properties-file
+
+=== Default Files
+
+hawkular_properties file located under `src/test/resources/hawkular-rest-test.properties`
+
+log4j properties file located under `src/test/resources/log4j-logger.properties`
+
+=== TestNG files
+
+TestNG files are located under `src/test/resources/testfiles/`

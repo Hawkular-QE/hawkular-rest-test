@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="HawkularRestFunctionalTest">
+	<test name="ResourceTest">
+		<classes>
+			<class name="org.hawkular.qe.rest.test.inventory.ResourceTest" />
+		</classes>
+	</test>
+</suite>

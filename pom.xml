@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.hawkular.qe</groupId>
+  <artifactId>org.hawkular.qe.rest.java</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>hawkular.rest.test</name>
+  <url>https://github.com/Hawkular-QE/hawkular-rest-test</url>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+    <version.testng>6.8.21</version.testng>
+    <version.hawkular-java-client>0.0.1-SNAPSHOT</version.hawkular-java-client>
+    <version.slf4j-api>1.7.10</version.slf4j-api>
+    <version.slf4j-log4j>1.7.5</version.slf4j-log4j>
+    <version.maven-compiler-plugin>3.1</version.maven-compiler-plugin>
+    <version.maven-surefire-plugin>2.16</version.maven-surefire-plugin>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>JBOSS</id>
+      <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+    </repository>
+    <repository>
+      <id>clojars</id>
+      <url>https://clojars.org/repo</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.hawkular.client</groupId>
+      <artifactId>hawkular-java-client</artifactId>
+      <version>${version.hawkular-java-client}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${version.slf4j-api}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${version.slf4j-log4j}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${version.testng}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <showWarnings>${maven.compiler.showWarnings}</showWarnings>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire-plugin}</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>src/test/resources/testfiles/hawkular-rest-functional-test.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
