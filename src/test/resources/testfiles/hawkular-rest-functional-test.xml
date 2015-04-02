@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="HawkularRestFunctionalTest">
-	<test name="ResourceTest">
-		<classes>
-			<class name="org.hawkular.qe.rest.test.inventory.ResourceTest" />
-		</classes>
-	</test>
+  <test name="Inventory-ReachableTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.ReachableTest" />
+    </classes>
+  </test>
+  <test name="Inventory-TenantTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.TenantTest" />
+    </classes>
+  </test>
 </suite>

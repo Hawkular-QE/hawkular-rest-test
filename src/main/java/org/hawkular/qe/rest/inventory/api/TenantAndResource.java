@@ -1,6 +1,6 @@
 package org.hawkular.qe.rest.inventory.api;
 
-import org.hawkular.inventory.api.Resource;
+import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.metrics.core.api.Tenant;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)

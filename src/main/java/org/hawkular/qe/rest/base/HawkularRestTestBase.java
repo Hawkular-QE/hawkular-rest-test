@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.hawkular.client.HawkularClient;
-import org.hawkular.client.inventory.StringWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeSuite;
@@ -49,14 +48,6 @@ public class HawkularRestTestBase {
                                             new URI(getHawkularRestTestProperties().getHawkularUrl()),
                                             getHawkularRestTestProperties().getHawkularUsername(),
                                             getHawkularRestTestProperties().getHawkularPassword());
-        StringWrapper pingResponse = hawkularClient.inventory().ping();
-        if(pingResponse!=null){
-            if(!pingResponse.getValue().equalsIgnoreCase( "Hello World" )){
-                throw new Exception("REST connection creation failed...");
-            }
-        }else{
-            throw new Exception("REST connection creation failed...");
-        }
         _logger.debug("'HawkularClient' client loaded...");
     }
 
