@@ -2,12 +2,34 @@
 <suite name="HawkularRestFunctionalTest">
   <test name="Inventory-ReachableTest">
     <classes>
-      <class name="org.hawkular.qe.rest.test.inventory.ReachableTest" />
+      <class name="org.hawkular.qe.rest.test.inventory.ReachableTest">
+        <methods>
+          <exclude name="listTest" />
+        </methods>
+      </class>
     </classes>
   </test>
   <test name="Inventory-TenantTest">
     <classes>
       <class name="org.hawkular.qe.rest.test.inventory.TenantTest" />
+    </classes>
+  </test>
+  <test name="Inventory-EnvironmentTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.EnvironmentTest">
+        <methods>
+          <exclude name="listTest" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="Inventory-MetricTypeTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.MetricTypeTest">
+        <methods>
+          <exclude name="listTest" />
+        </methods>
+      </class>
     </classes>
   </test>
 </suite>
