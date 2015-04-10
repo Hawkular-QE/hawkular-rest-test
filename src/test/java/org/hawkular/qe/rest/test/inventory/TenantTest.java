@@ -7,6 +7,7 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -38,7 +39,7 @@ public class TenantTest extends InventoryTestBase {
     public void listTest() {
         List<Tenant> tenantsReceived = getHawkularClient().inventory().getTenants();
         _logger.debug("Number of Tenants:[{}], list:[{}]", tenantsReceived.size(), tenantsReceived);
-        assertTenantsList((List<Tenant>) getTenants(), tenantsReceived);
+        assertTenantsList(tenantsReceived, (List<Tenant>) getTenants());
     }
 
     @Test(dataProvider = "tenantDataProvider", priority = 3)

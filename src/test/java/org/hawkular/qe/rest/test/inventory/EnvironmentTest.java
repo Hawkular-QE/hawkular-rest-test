@@ -2,9 +2,9 @@ package org.hawkular.qe.rest.test.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.hawkular.inventory.api.model.Environment;
+import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -39,13 +39,27 @@ public class EnvironmentTest extends InventoryTestBase {
     @SuppressWarnings("unchecked")
     @Test(priority = 2)
     public void listTest() {
-        Set<Environment> environments = getHawkularClient().inventory().getEnvironments(TENANT_ID);
-        Assert.assertNotNull(environments);
-        _logger.debug("Number of Environement:[{}], list:[{}]", environments.size(), environments);
-        assertEnvironmentsList((List<Environment>) getEnvironments(), new ArrayList<Environment>(environments));
+        try {
+            List<Environment> environments = getHawkularClient().inventory().getEnvironments(TENANT_ID);
+            Assert.assertNotNull(environments);
+            _logger.debug("Number of Environement:[{}], list:[{}]", environments.size(), environments);
+            assertEnvironmentsList(environments, (List<Environment>) getEnvironments());
+        } catch (Exception ex) {
+            _logger.error("Exception, ", ex);
+        }
+
     }
 
     @Test(dataProvider = "environmentDataProvider", priority = 3)
+    public void getTest(Environment environment) {
+        _logger.debug("Getting environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
+        Environment environmentRx = getHawkularClient().inventory().getEnvironment(environment);
+        Assert.assertNotNull(environmentRx);
+        _logger.debug("Received environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
+        assertEnvironments(environmentRx, environment);
+    }
+
+    @Test(dataProvider = "environmentDataProvider", priority = 4)
     public void deleteTest(Environment environment) {
         _logger.debug("Deleting environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
         Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(environment));

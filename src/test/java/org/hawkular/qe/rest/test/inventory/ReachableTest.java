@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -19,7 +20,7 @@ public class ReachableTest extends InventoryTestBase {
     public void pingHelloTest() {
         String pingResult = getHawkularClient().inventory().pingHello();
         _logger.debug("Hawkular Inventory Ping Hello response:[{}]", pingResult);
-        Assert.assertEquals(pingResult, "Hawkular Inventory");
+        Assert.assertEquals("Hawkular Inventory", pingResult);
     }
 
     @Test(priority = 2)
