@@ -3,9 +3,6 @@ package org.hawkular.qe.rest.test.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
@@ -23,15 +20,7 @@ public class TenantTest extends InventoryTestBase {
     @Test(dataProvider = "tenantDataProvider", priority = 1)
     public void creatTest(Tenant tenant) {
         _logger.debug("Creating tenant:{}", tenant.getId());
-        try {
-            Assert.assertTrue(getHawkularClient().inventory().createTenant(tenant));
-
-        } catch (WebApplicationException ex) {
-            _logger.error("Exception", ex);
-            ex.getResponse().close();
-        } catch (ProcessingException pEx) {
-            _logger.error("Exception", pEx);
-        }
+        Assert.assertTrue(getHawkularClient().inventory().createTenant(tenant));
     }
 
     @SuppressWarnings("unchecked")

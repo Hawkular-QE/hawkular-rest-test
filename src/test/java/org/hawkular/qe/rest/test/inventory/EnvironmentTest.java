@@ -39,15 +39,10 @@ public class EnvironmentTest extends InventoryTestBase {
     @SuppressWarnings("unchecked")
     @Test(priority = 2)
     public void listTest() {
-        try {
-            List<Environment> environments = getHawkularClient().inventory().getEnvironments(TENANT_ID);
-            Assert.assertNotNull(environments);
-            _logger.debug("Number of Environement:[{}], list:[{}]", environments.size(), environments);
-            assertEnvironmentsList(environments, (List<Environment>) getEnvironments());
-        } catch (Exception ex) {
-            _logger.error("Exception, ", ex);
-        }
-
+        List<Environment> environments = getHawkularClient().inventory().getEnvironments(TENANT_ID);
+        Assert.assertNotNull(environments);
+        _logger.debug("Number of Environement:[{}], list:[{}]", environments.size(), environments);
+        assertEnvironmentsList(environments, (List<Environment>) getEnvironments());
     }
 
     @Test(dataProvider = "environmentDataProvider", priority = 3)
