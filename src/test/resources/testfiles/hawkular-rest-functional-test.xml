@@ -27,4 +27,16 @@
       </class>
     </classes>
   </test>
+  <test name="Inventory-ResourceTypeTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.ResourceTypeTest">
+      </class>
+    </classes>
+  </test>
+  <test name="Inventory-ResourceTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.ResourceTest">
+      </class>
+    </classes>
+  </test>
 </suite>

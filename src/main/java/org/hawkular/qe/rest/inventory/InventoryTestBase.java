@@ -5,6 +5,8 @@ import java.util.List;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
+import org.hawkular.inventory.api.model.Resource;
+import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
 import org.slf4j.Logger;
@@ -92,6 +94,7 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
         Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getProperties(), expected.getProperties());
         Assert.assertEquals(actual.getEnvironmentId(), expected.getEnvironmentId());
         assertMetricTypes(actual.getType(), expected.getType());
     }
@@ -110,6 +113,63 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the Metric:{} under the Tenant:{}, Found?:{}",
+                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            Assert.assertTrue(found);
+        }
+    }
+
+    public void assertResourceTypes(ResourceType actual, ResourceType expected) {
+        Assert.assertNotNull(actual);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(actual.getId(), expected.getId());
+        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getVersion(), expected.getVersion());
+        Assert.assertEquals(actual.getProperties(), expected.getProperties());
+    }
+
+    public void assertResourceTypesList(List<ResourceType> actual, List<ResourceType> expected) {
+        Assert.assertNotNull(actual);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(actual.size(), expected.size());
+        for (int loc = 0; loc < actual.size(); loc++) {
+            boolean found = false;
+            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
+                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
+                    assertResourceTypes(actual.get(loc), expected.get(locAnother));
+                    found = true;
+                    break;
+                }
+            }
+            _logger.debug("Processed for the ResourceType:{} under the Tenant:{}, Found?:{}",
+                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            Assert.assertTrue(found);
+        }
+    }
+
+    public void assertResources(Resource actual, Resource expected) {
+        Assert.assertNotNull(actual);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(actual.getId(), expected.getId());
+        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getProperties(), expected.getProperties());
+        Assert.assertEquals(actual.getEnvironmentId(), expected.getEnvironmentId());
+        assertResourceTypes(actual.getType(), expected.getType());
+    }
+
+    public void assertResourcesList(List<Resource> actual, List<Resource> expected) {
+        Assert.assertNotNull(actual);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(actual.size(), expected.size());
+        for (int loc = 0; loc < actual.size(); loc++) {
+            boolean found = false;
+            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
+                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
+                    assertResources(actual.get(loc), expected.get(locAnother));
+                    found = true;
+                    break;
+                }
+            }
+            _logger.debug("Processed for the Resource:{} under the Tenant:{}, Found?:{}",
                     actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
             Assert.assertTrue(found);
         }
