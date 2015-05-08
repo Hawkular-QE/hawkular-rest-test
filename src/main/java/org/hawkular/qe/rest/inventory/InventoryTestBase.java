@@ -3,6 +3,7 @@ package org.hawkular.qe.rest.inventory;
 import java.util.List;
 
 import org.hawkular.inventory.api.model.Environment;
+import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.Resource;
@@ -170,6 +171,34 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the Resource:{} under the Tenant:{}, Found?:{}",
+                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            Assert.assertTrue(found);
+        }
+    }
+
+    public void assertFeeds(Feed actual, Feed expected) {
+        Assert.assertNotNull(actual);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(actual.getId(), expected.getId());
+        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getProperties(), expected.getProperties());
+        Assert.assertEquals(actual.getEnvironmentId(), expected.getEnvironmentId());
+    }
+
+    public void assertFeedsList(List<Feed> actual, List<Feed> expected) {
+        Assert.assertNotNull(actual);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(actual.size(), expected.size());
+        for (int loc = 0; loc < actual.size(); loc++) {
+            boolean found = false;
+            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
+                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
+                    assertFeeds(actual.get(loc), expected.get(locAnother));
+                    found = true;
+                    break;
+                }
+            }
+            _logger.debug("Processed for the Feed:{} under the Tenant:{}, Found?:{}",
                     actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
             Assert.assertTrue(found);
         }

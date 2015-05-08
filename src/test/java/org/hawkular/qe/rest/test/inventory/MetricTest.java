@@ -3,6 +3,7 @@ package org.hawkular.qe.rest.test.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
@@ -22,6 +23,7 @@ public class MetricTest extends InventoryTestBase {
     private static final Logger _logger = LoggerFactory.getLogger(MetricTest.class);
     private static final String TENANT_ID = "tenant-metric-test";
     private static final String ENVIRONMENT_ID = "environment-metric-test";
+    private static final String FEED_ID = "feed-metric-test";
     private static final String METRIC_TYPE_ID = "metric-type-test";
     private static final MetricType METRIC_TYPE = new MetricType(TENANT_ID, METRIC_TYPE_ID, MetricUnit.MILLI_SECOND);
 
@@ -29,12 +31,14 @@ public class MetricTest extends InventoryTestBase {
     public void setup() {
         Assert.assertTrue(getHawkularClient().inventory().createTenant(TENANT_ID));
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(TENANT_ID, ENVIRONMENT_ID));
+        Assert.assertTrue(getHawkularClient().inventory().registerFeed(new Feed(TENANT_ID, ENVIRONMENT_ID, FEED_ID)));
         Assert.assertTrue(getHawkularClient().inventory().createMetricType(METRIC_TYPE));
     }
 
     @AfterClass
     public void clean() {
         Assert.assertTrue(getHawkularClient().inventory().deleteMetricType(METRIC_TYPE));
+        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(TENANT_ID, ENVIRONMENT_ID, FEED_ID));
         Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(TENANT_ID, ENVIRONMENT_ID));
         Assert.assertTrue(getHawkularClient().inventory().deleteTenant(TENANT_ID));
     }
@@ -78,12 +82,12 @@ public class MetricTest extends InventoryTestBase {
 
     public static List<? extends Object> getMetrics() {
         List<Metric> metrics = new ArrayList<>();
-        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, "metric1", METRIC_TYPE));
-        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, "_m", METRIC_TYPE));
-        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, "3metric-_", METRIC_TYPE));
-        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, "metric-2323", METRIC_TYPE));
-        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, "metric-withlooooooooooooooooooooooooooooooooongstring",
-                METRIC_TYPE));
+        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "metric1", METRIC_TYPE));
+        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "_m", METRIC_TYPE));
+        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "3metric-_", METRIC_TYPE));
+        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "metric-2323", METRIC_TYPE));
+        metrics.add(new Metric(TENANT_ID, ENVIRONMENT_ID, FEED_ID,
+                "metric-withlooooooooooooooooooooooooooooooooongstring", METRIC_TYPE));
         return metrics;
     }
 

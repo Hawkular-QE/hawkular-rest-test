@@ -5,6 +5,11 @@
       <class name="org.hawkular.qe.rest.test.inventory.ReachableTest" />
     </classes>
   </test>
+  <test name="Inventory-EmptyTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.EmptyTest" />
+    </classes>
+  </test>
   <test name="Inventory-TenantTest">
     <classes>
       <class name="org.hawkular.qe.rest.test.inventory.TenantTest" />
@@ -13,6 +18,12 @@
   <test name="Inventory-EnvironmentTest">
     <classes>
       <class name="org.hawkular.qe.rest.test.inventory.EnvironmentTest" />
+    </classes>
+  </test>
+  <test name="Inventory-FeedTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.inventory.FeedTest">
+      </class>
     </classes>
   </test>
   <test name="Inventory-MetricTypeTest">

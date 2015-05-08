@@ -3,6 +3,7 @@ package org.hawkular.qe.rest.test.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
@@ -21,6 +22,7 @@ public class ResourceTest extends InventoryTestBase {
     private static final Logger _logger = LoggerFactory.getLogger(ResourceTest.class);
     private static final String TENANT_ID = "tenant-resource-test";
     private static final String ENVIRONMENT_ID = "environment-resource-test";
+    private static final String FEED_ID = "feed-resource-test";
     private static final String RESOURCE_TYPE_ID = "resource-type-test";
     private static final ResourceType RESOURCE_TYPE = new ResourceType(TENANT_ID, RESOURCE_TYPE_ID, "V1.0");
 
@@ -28,12 +30,14 @@ public class ResourceTest extends InventoryTestBase {
     public void setup() {
         Assert.assertTrue(getHawkularClient().inventory().createTenant(TENANT_ID));
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(TENANT_ID, ENVIRONMENT_ID));
+        Assert.assertTrue(getHawkularClient().inventory().registerFeed(new Feed(TENANT_ID, ENVIRONMENT_ID, FEED_ID)));
         Assert.assertTrue(getHawkularClient().inventory().createResourceType(RESOURCE_TYPE));
     }
 
     @AfterClass
     public void clean() {
         Assert.assertTrue(getHawkularClient().inventory().deleteResourceType(RESOURCE_TYPE));
+        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(TENANT_ID, ENVIRONMENT_ID, FEED_ID));
         Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(TENANT_ID, ENVIRONMENT_ID));
         Assert.assertTrue(getHawkularClient().inventory().deleteTenant(TENANT_ID));
     }
@@ -81,13 +85,12 @@ public class ResourceTest extends InventoryTestBase {
 
     public static List<? extends Object> getResources() {
         List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, "resource1", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, "_r", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, "3resource-_", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, "resource-2323", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID,
-                "resource-withlooooooooooooooooooooooooooooooooongstring",
-                RESOURCE_TYPE));
+        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "resource1", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "_r", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "3resource-_", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "resource-2323", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID,
+                "resource-withlooooooooooooooooooooooooooooooooongstring", RESOURCE_TYPE));
         return resources;
     }
 
