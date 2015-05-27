@@ -50,4 +50,11 @@
       </class>
     </classes>
   </test>
+  
+  <test name="Metrics-TenantTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.metrics.TenantTest">
+      </class>
+    </classes>
+  </test>
 </suite>

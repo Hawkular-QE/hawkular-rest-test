@@ -15,7 +15,7 @@ import org.testng.annotations.BeforeSuite;
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public class HawkularRestTestBase {
-    private static Logger _logger = LoggerFactory.getLogger(HawkularRestTestBase.class);
+    public static final Logger _logger = LoggerFactory.getLogger(HawkularRestTestBase.class);
     private static HawkularRestTestProperties hawkularRestTestProperties;
     private static HawkularClient hawkularClient = null;
     @BeforeSuite
