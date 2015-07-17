@@ -10,11 +10,6 @@
       <class name="org.hawkular.qe.rest.test.inventory.unittest.EmptyTest" />
     </classes>
   </test>
-  <test name="Inventory-TenantTest">
-    <classes>
-      <class name="org.hawkular.qe.rest.test.inventory.unittest.TenantTest" />
-    </classes>
-  </test>
   <test name="Inventory-EnvironmentTest">
     <classes>
       <class name="org.hawkular.qe.rest.test.inventory.unittest.EnvironmentTest" />
