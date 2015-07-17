@@ -1,4 +1,4 @@
-package org.hawkular.qe.rest.test.inventory;
+package org.hawkular.qe.rest.test.inventory.unittest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,20 +18,21 @@ public class ReachableTest extends InventoryTestBase {
 
     @Test(priority = 1)
     public void pingHelloTest() {
-        String pingResult = getHawkularClient().inventory().pingHello();
+        String pingResult = getHawkularClient().inventory().pingHello().getEntity().getValue();
         _logger.debug("Hawkular Inventory Ping Hello response:[{}]", pingResult);
         Assert.assertEquals("Hawkular Inventory", pingResult);
     }
 
     @Test(priority = 2)
     public void pingTimeTest() {
-        String pingResult = getHawkularClient().inventory().pingTime();
+        String pingResult = getHawkularClient().inventory().pingTime().getEntity().getValue();
         _logger.debug("Hawkular Inventory Ping Time response:[{}]", pingResult);
         try {
             //Format: Thu Apr 02 17:31:10 IST 2015
             //TODO: showing wrong time after parsed, fix this
-            Date date = new SimpleDateFormat("EEE MMM dd HH:mm:ss z YYYY").parse(pingResult);
-            _logger.debug("Converted as date object, Time in milliseconds:[{}], in date:[{}]", date.getTime(), date);
+            Date date = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy").parse(pingResult);
+            _logger.debug("Converted as date object, Time in milliseconds:[{}], in date:[{}], received time[{}]",
+                    date.getTime(), date, pingResult);
         } catch (ParseException ex) {
             _logger.debug("Exception while converting string to date: {}", ex.getMessage());
             Assert.fail("unable to convert as timestamp, Received string: " + pingResult);

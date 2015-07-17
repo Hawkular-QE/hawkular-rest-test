@@ -2,7 +2,7 @@ package org.hawkular.qe.rest.base.metrics;
 
 import java.util.List;
 
-import org.hawkular.metrics.core.api.Tenant;
+import org.hawkular.client.metrics.model.TenantParam;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
 import org.testng.Assert;
 
@@ -11,7 +11,7 @@ import org.testng.Assert;
  */
 public class MetricsTestBase extends HawkularRestTestBase {
 
-    public void assertTenantsList(List<Tenant> actual, List<Tenant> expected) {
+    public void assertTenantsList(List<TenantParam> actual, List<TenantParam> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.size(), expected.size());
@@ -29,11 +29,10 @@ public class MetricsTestBase extends HawkularRestTestBase {
         }
     }
 
-    public void assertTenants(Tenant actual, Tenant expected) {
+    public void assertTenants(TenantParam actual, TenantParam expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getRetentionSettings(), expected.getRetentionSettings());
     }
 
 }

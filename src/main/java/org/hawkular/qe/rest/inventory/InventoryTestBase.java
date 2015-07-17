@@ -13,12 +13,21 @@ import org.hawkular.qe.rest.base.HawkularRestTestBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public class InventoryTestBase extends HawkularRestTestBase {
-    private static final Logger _logger = LoggerFactory.getLogger(InventoryTestBase.class);
+    public static final Logger _logger = LoggerFactory.getLogger(InventoryTestBase.class);
+    public static Tenant TENANT = null;
+
+    @BeforeClass
+    public void loadTenant() {
+        if (TENANT == null) {
+            TENANT = getHawkularClient().inventory().getTenant().getEntity();
+        }
+    }
 
     public void assertTenantsList(List<Tenant> actual, List<Tenant> expected) {
         Assert.assertNotNull(actual);

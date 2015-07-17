@@ -1,4 +1,4 @@
-package org.hawkular.qe.rest.test.inventory;
+package org.hawkular.qe.rest.test.inventory.unittest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,26 +20,24 @@ import org.testng.annotations.Test;
  */
 public class ResourceTest extends InventoryTestBase {
     private static final Logger _logger = LoggerFactory.getLogger(ResourceTest.class);
-    private static final String TENANT_ID = "tenant-resource-test";
     private static final String ENVIRONMENT_ID = "environment-resource-test";
     private static final String FEED_ID = "feed-resource-test";
     private static final String RESOURCE_TYPE_ID = "resource-type-test";
-    private static final ResourceType RESOURCE_TYPE = new ResourceType(TENANT_ID, RESOURCE_TYPE_ID, "V1.0");
+    private static final ResourceType RESOURCE_TYPE = new ResourceType(TENANT.getId(), RESOURCE_TYPE_ID, "V1.0");
 
     @BeforeClass
     public void setup() {
-        Assert.assertTrue(getHawkularClient().inventory().createTenant(TENANT_ID));
-        Assert.assertTrue(getHawkularClient().inventory().createEnvironment(TENANT_ID, ENVIRONMENT_ID));
-        Assert.assertTrue(getHawkularClient().inventory().registerFeed(new Feed(TENANT_ID, ENVIRONMENT_ID, FEED_ID)));
-        Assert.assertTrue(getHawkularClient().inventory().createResourceType(RESOURCE_TYPE));
+        Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
+        Assert.assertTrue(getHawkularClient().inventory()
+                .registerFeed(new Feed(TENANT.getId(), ENVIRONMENT_ID, FEED_ID)).isSuccess());
+        Assert.assertTrue(getHawkularClient().inventory().createResourceType(RESOURCE_TYPE).isSuccess());
     }
 
     @AfterClass
     public void clean() {
-        Assert.assertTrue(getHawkularClient().inventory().deleteResourceType(RESOURCE_TYPE));
-        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(TENANT_ID, ENVIRONMENT_ID, FEED_ID));
-        Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(TENANT_ID, ENVIRONMENT_ID));
-        Assert.assertTrue(getHawkularClient().inventory().deleteTenant(TENANT_ID));
+        Assert.assertTrue(getHawkularClient().inventory().deleteResourceType(RESOURCE_TYPE).isSuccess());
+        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(ENVIRONMENT_ID, FEED_ID).isSuccess());
+        Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(ENVIRONMENT_ID).isSuccess());
     }
 
     @Test(dataProvider = "resourceDataProvider", priority = 1)
@@ -47,14 +45,14 @@ public class ResourceTest extends InventoryTestBase {
         _logger.debug("Creating Resource[{}] under [tenant:{},environment:{}]", resource.getId(),
                 resource.getTenantId(),
                 resource.getEnvironmentId());
-        Assert.assertTrue(getHawkularClient().inventory().addResource(resource));
+        Assert.assertTrue(getHawkularClient().inventory().addResource(resource).isSuccess());
     }
 
     @SuppressWarnings("unchecked")
     @Test(priority = 2)
     public void listTest() {
-        List<Resource> resources = getHawkularClient().inventory().getResourcesByType(TENANT_ID, ENVIRONMENT_ID,
-                RESOURCE_TYPE_ID, RESOURCE_TYPE.getVersion().toString());
+        List<Resource> resources = getHawkularClient().inventory().getResourcesByType(ENVIRONMENT_ID,
+                RESOURCE_TYPE_ID, RESOURCE_TYPE.getVersion().toString()).getEntity();
         Assert.assertNotNull(resources);
         _logger.debug("Number of Resources:[{}], list:[{}]", resources.size(), resources);
         assertResourcesList(resources, (List<Resource>) getResources());
@@ -65,7 +63,7 @@ public class ResourceTest extends InventoryTestBase {
         _logger.debug("Fetching resource[{}] under [tenant:{},environment:{}]", resource.getId(),
                 resource.getTenantId(),
                 resource.getEnvironmentId());
-        Resource resourceRx = getHawkularClient().inventory().getResource(resource);
+        Resource resourceRx = getHawkularClient().inventory().getResource(resource).getEntity();
         assertResources(resourceRx, resource);
     }
 
@@ -74,7 +72,7 @@ public class ResourceTest extends InventoryTestBase {
         _logger.debug("Deleting resource[{}] under [tenant:{},environment:{}]", resource.getId(),
                 resource.getTenantId(),
                 resource.getEnvironmentId());
-        Assert.assertTrue(getHawkularClient().inventory().deleteResource(resource));
+        Assert.assertTrue(getHawkularClient().inventory().deleteResource(resource).isSuccess());
     }
 
     @SuppressWarnings("unchecked")
@@ -85,11 +83,11 @@ public class ResourceTest extends InventoryTestBase {
 
     public static List<? extends Object> getResources() {
         List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "resource1", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "_r", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "3resource-_", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, "resource-2323", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID,
+        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "resource1", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "_r", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "3resource-_", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "resource-2323", RESOURCE_TYPE));
+        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID,
                 "resource-withlooooooooooooooooooooooooooooooooongstring", RESOURCE_TYPE));
         return resources;
     }

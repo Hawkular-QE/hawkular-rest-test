@@ -3,6 +3,7 @@ package org.hawkular.qe.rest.test.metrics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.client.metrics.model.TenantParam;
 import org.hawkular.metrics.core.api.Tenant;
 import org.hawkular.qe.rest.base.metrics.MetricsTestBase;
 import org.testng.Assert;
@@ -15,15 +16,15 @@ import org.testng.annotations.Test;
 public class TenantTest extends MetricsTestBase {
 
     @Test(dataProvider = "tenantDataProvider", priority = 1)
-    public void createsTest(Tenant tenant) {
-        Assert.assertTrue(getHawkularClient().metrics().createTenant(tenant));
+    public void createsTest(TenantParam tenant) {
+        Assert.assertTrue(getHawkularClient().metrics().createTenant(new Tenant(tenant.getId())));
     }
 
     @SuppressWarnings("unchecked")
     @Test(priority = 2)
-    public void findTest(Tenant tenant) {
-        List<Tenant> tenantsRx = getHawkularClient().metrics().findTenants();
-        assertTenantsList(tenantsRx, (List<Tenant>) getTenants());
+    public void findTest(TenantParam tenant) {
+        List<TenantParam> tenantsRx = getHawkularClient().metrics().getTenants();
+        assertTenantsList(tenantsRx, (List<TenantParam>) getTenants());
     }
 
     @SuppressWarnings("unchecked")
@@ -33,7 +34,7 @@ public class TenantTest extends MetricsTestBase {
     }
 
     public static List<? extends Object> getTenants() {
-        List<Tenant> tenants = new ArrayList<>();
+        List<TenantParam> tenants = new ArrayList<>();
         tenants.add(getTenant("tenant1"));
         tenants.add(getTenant("_t2"));
         tenants.add(getTenant("3t_"));
@@ -43,9 +44,8 @@ public class TenantTest extends MetricsTestBase {
         return tenants;
     }
 
-    private static Tenant getTenant(String id) {
-        Tenant tenant = new Tenant();
-        tenant.setId(id);
+    private static TenantParam getTenant(String id) {
+        TenantParam tenant = new TenantParam(new Tenant(id));
         return tenant;
     }
 
