@@ -20,6 +20,7 @@ import org.testng.annotations.BeforeClass;
  */
 public class InventoryTestBase extends HawkularRestTestBase {
     public static final Logger _logger = LoggerFactory.getLogger(InventoryTestBase.class);
+    public static final double DATA_MB = 1024.0 * 1024.0;
     public static Tenant TENANT = null;
 
     @BeforeClass
@@ -33,15 +34,15 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the Tenant:{}, Found?:{}", actual.get(loc).getId(), found);
+            _logger.debug("Processed for the Tenant:[{}], Found?:[{}]", expected.get(expectedCount).getId(), found);
             Assert.assertTrue(found);
         }
     }
@@ -49,17 +50,17 @@ public class InventoryTestBase extends HawkularRestTestBase {
     public void assertEnvironmentsList(List<Environment> actual, List<Environment> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
-        Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        Assert.assertTrue(actual.size() >= expected.size());
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the Environment:{} under the Tenant:{}, Found?:{}",
-                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            _logger.debug("Processed for the Environment:[{}] under the Tenant:[{}], Found?:[{}]",
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
             Assert.assertTrue(found);
         }
     }
@@ -83,18 +84,18 @@ public class InventoryTestBase extends HawkularRestTestBase {
     public void assertMetricTypesList(List<MetricType> actual, List<MetricType> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
-        Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        Assert.assertTrue(actual.size() >= expected.size());
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
-                    assertMetricTypes(actual.get(loc), expected.get(locAnother));
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
+                    assertMetricTypes(actual.get(actualCount), expected.get(expectedCount));
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the MetricType:{} under the Tenant:{}, Found?:{}",
-                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            _logger.debug("Processed for the MetricType:[{}] under the Tenant:[{}], Found?:[{}]",
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
             Assert.assertTrue(found);
         }
     }
@@ -112,18 +113,18 @@ public class InventoryTestBase extends HawkularRestTestBase {
     public void assertMetricsList(List<Metric> actual, List<Metric> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
-        Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        Assert.assertTrue(actual.size() >= expected.size());
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
-                    assertMetrics(actual.get(loc), expected.get(locAnother));
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
+                    assertMetrics(actual.get(actualCount), expected.get(expectedCount));
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the Metric:{} under the Tenant:{}, Found?:{}",
-                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            _logger.debug("Processed for the Metric:[{}] under the Tenant:[{}], Found?:[{}]",
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
             Assert.assertTrue(found);
         }
     }
@@ -140,18 +141,18 @@ public class InventoryTestBase extends HawkularRestTestBase {
     public void assertResourceTypesList(List<ResourceType> actual, List<ResourceType> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
-        Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        Assert.assertTrue(actual.size() >= expected.size());
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
-                    assertResourceTypes(actual.get(loc), expected.get(locAnother));
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
+                    assertResourceTypes(actual.get(actualCount), expected.get(expectedCount));
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the ResourceType:{} under the Tenant:{}, Found?:{}",
-                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            _logger.debug("Processed for the ResourceType:[{}] under the Tenant:[{}], Found?:[{}]",
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
             Assert.assertTrue(found);
         }
     }
@@ -169,18 +170,18 @@ public class InventoryTestBase extends HawkularRestTestBase {
     public void assertResourcesList(List<Resource> actual, List<Resource> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
-        Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        Assert.assertTrue(actual.size() >= expected.size());
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
-                    assertResources(actual.get(loc), expected.get(locAnother));
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
+                    assertResources(actual.get(actualCount), expected.get(expectedCount));
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the Resource:{} under the Tenant:{}, Found?:{}",
-                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            _logger.debug("Processed for the Resource:[{}] under the Tenant:[{}], Found?:[{}]",
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
             Assert.assertTrue(found);
         }
     }
@@ -197,18 +198,18 @@ public class InventoryTestBase extends HawkularRestTestBase {
     public void assertFeedsList(List<Feed> actual, List<Feed> expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
-        Assert.assertEquals(actual.size(), expected.size());
-        for (int loc = 0; loc < actual.size(); loc++) {
+        Assert.assertTrue(actual.size() >= expected.size());
+        for (int expectedCount = 0; expectedCount < expected.size(); expectedCount++) {
             boolean found = false;
-            for (int locAnother = 0; locAnother < actual.size(); locAnother++) {
-                if (actual.get(loc).getId().equals(expected.get(locAnother).getId())) {
-                    assertFeeds(actual.get(loc), expected.get(locAnother));
+            for (int actualCount = 0; actualCount < actual.size(); actualCount++) {
+                if (actual.get(actualCount).getId().equals(expected.get(expectedCount).getId())) {
+                    assertFeeds(actual.get(actualCount), expected.get(expectedCount));
                     found = true;
                     break;
                 }
             }
-            _logger.debug("Processed for the Feed:{} under the Tenant:{}, Found?:{}",
-                    actual.get(loc).getId(), actual.get(loc).getTenantId(), found);
+            _logger.debug("Processed for the Feed:[{}] under the Tenant:[{}], Found?:[{}]",
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
             Assert.assertTrue(found);
         }
     }

@@ -2,7 +2,8 @@
 <suite name="HawkularRestFunctionalTest">
   <test name="Inventory-ReachableTest">
     <classes>
-      <class name="org.hawkular.qe.rest.test.inventory.unittest.ReachableTest" />
+      <class
+        name="org.hawkular.qe.rest.test.inventory.unittest.ReachableTest" />
     </classes>
   </test>
   <test name="Inventory-EmptyTest">
@@ -12,7 +13,8 @@
   </test>
   <test name="Inventory-EnvironmentTest">
     <classes>
-      <class name="org.hawkular.qe.rest.test.inventory.unittest.EnvironmentTest" />
+      <class
+        name="org.hawkular.qe.rest.test.inventory.unittest.EnvironmentTest" />
     </classes>
   </test>
   <test name="Inventory-FeedTest">
@@ -23,7 +25,8 @@
   </test>
   <test name="Inventory-MetricTypeTest">
     <classes>
-      <class name="org.hawkular.qe.rest.test.inventory.unittest.MetricTypeTest">
+      <class
+        name="org.hawkular.qe.rest.test.inventory.unittest.MetricTypeTest">
       </class>
     </classes>
   </test>
@@ -35,7 +38,8 @@
   </test>
   <test name="Inventory-ResourceTypeTest">
     <classes>
-      <class name="org.hawkular.qe.rest.test.inventory.unittest.ResourceTypeTest">
+      <class
+        name="org.hawkular.qe.rest.test.inventory.unittest.ResourceTypeTest">
       </class>
     </classes>
   </test>
@@ -45,10 +49,15 @@
       </class>
     </classes>
   </test>
-  
   <test name="Metrics-TenantTest">
     <classes>
-      <class name="org.hawkular.qe.rest.test.metrics.TenantTest">
+      <class name="org.hawkular.qe.rest.test.metrics.unittest.TenantTest">
+      </class>
+    </classes>
+  </test>
+  <test name="Inventory-WildFlyJvmTest">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.wildfly.WildFlyJvmTest">
       </class>
     </classes>
   </test>

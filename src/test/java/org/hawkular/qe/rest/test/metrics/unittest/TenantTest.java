@@ -1,4 +1,4 @@
-package org.hawkular.qe.rest.test.metrics;
+package org.hawkular.qe.rest.test.metrics.unittest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,11 @@ public class TenantTest extends MetricsTestBase {
 
     @Test(dataProvider = "tenantDataProvider", priority = 1)
     public void createsTest(TenantParam tenant) {
-        Assert.assertTrue(getHawkularClient().metrics().createTenant(new Tenant(tenant.getId())));
+        if (isTenantAvailable(getHawkularClient().metrics().getTenants(), tenant)) {
+            _logger.debug("A tenant with id [{}] already exists", tenant.getId());
+        } else {
+            Assert.assertTrue(getHawkularClient().metrics().createTenant(new Tenant(tenant.getId())));
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -24,11 +24,13 @@ public class MetricTest extends InventoryTestBase {
     private static final String ENVIRONMENT_ID = "environment-metric-test";
     private static final String FEED_ID = "feed-metric-test";
     private static final String METRIC_TYPE_ID = "metric-type-test";
-    private static final MetricType METRIC_TYPE = new MetricType(TENANT.getId(), METRIC_TYPE_ID,
-            MetricUnit.MILLI_SECOND);
+    private static MetricType METRIC_TYPE = null;
 
     @BeforeClass
     public void setup() {
+        if (METRIC_TYPE == null) {
+            METRIC_TYPE = new MetricType(TENANT.getId(), METRIC_TYPE_ID, MetricUnit.MILLI_SECOND);
+        }
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
         Assert.assertTrue(getHawkularClient().inventory()
                 .registerFeed(new Feed(TENANT.getId(), ENVIRONMENT_ID, FEED_ID)).isSuccess());
@@ -79,7 +81,7 @@ public class MetricTest extends InventoryTestBase {
         return this.get2dArray((List<Object>) getMetrics());
     }
 
-    public static List<? extends Object> getMetrics() {
+    public List<? extends Object> getMetrics() {
         List<Metric> metrics = new ArrayList<>();
         metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "metric1", METRIC_TYPE));
         metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "_m", METRIC_TYPE));

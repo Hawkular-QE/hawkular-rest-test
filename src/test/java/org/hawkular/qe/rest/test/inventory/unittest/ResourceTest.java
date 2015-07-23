@@ -23,10 +23,13 @@ public class ResourceTest extends InventoryTestBase {
     private static final String ENVIRONMENT_ID = "environment-resource-test";
     private static final String FEED_ID = "feed-resource-test";
     private static final String RESOURCE_TYPE_ID = "resource-type-test";
-    private static final ResourceType RESOURCE_TYPE = new ResourceType(TENANT.getId(), RESOURCE_TYPE_ID, "V1.0");
+    private static ResourceType RESOURCE_TYPE = null;
 
     @BeforeClass
     public void setup() {
+        if (RESOURCE_TYPE == null) {
+            RESOURCE_TYPE = new ResourceType(TENANT.getId(), RESOURCE_TYPE_ID, "V1.0");
+        }
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
         Assert.assertTrue(getHawkularClient().inventory()
                 .registerFeed(new Feed(TENANT.getId(), ENVIRONMENT_ID, FEED_ID)).isSuccess());
