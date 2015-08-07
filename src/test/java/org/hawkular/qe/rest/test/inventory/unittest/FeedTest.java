@@ -3,6 +3,7 @@ package org.hawkular.qe.rest.test.inventory.unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
@@ -69,11 +70,13 @@ public class FeedTest extends InventoryTestBase {
 
     public static List<? extends Object> getMetrics() {
         List<Feed> feeds = new ArrayList<>();
-        feeds.add(new Feed(TENANT.getId(), ENVIRONMENT_ID, "feed1"));
-        feeds.add(new Feed(TENANT.getId(), ENVIRONMENT_ID, "_f"));
-        feeds.add(new Feed(TENANT.getId(), ENVIRONMENT_ID, "3feed-_"));
-        feeds.add(new Feed(TENANT.getId(), ENVIRONMENT_ID, "feed-2323"));
-        feeds.add(new Feed(TENANT.getId(), ENVIRONMENT_ID, "feed-withlooooooooooooooooooooooooooooooooongstring"));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("feed1").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("_f").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("3feed-_").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("feed-2323")
+                .get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
+                .feed("feed-withlooooooooooooooooooooooooooooooooongstring").get()));
         return feeds;
     }
 

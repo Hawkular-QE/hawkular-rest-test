@@ -134,7 +134,6 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
         Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
-        Assert.assertEquals(actual.getVersion(), expected.getVersion());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
     }
 

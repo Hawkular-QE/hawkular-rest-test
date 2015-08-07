@@ -18,9 +18,9 @@ public class ReachableTest extends InventoryTestBase {
 
     @Test(priority = 1)
     public void pingHelloTest() {
-        String pingResult = getHawkularClient().inventory().pingHello().getEntity().getValue();
+        String pingResult = getHawkularClient().inventory().pingHello().getEntity().getDocumentation();
         _logger.debug("Hawkular Inventory Ping Hello response:[{}]", pingResult);
-        Assert.assertEquals("Hawkular Inventory", pingResult);
+        Assert.assertEquals(pingResult, "http://www.hawkular.org/");
     }
 
     @Test(priority = 2)

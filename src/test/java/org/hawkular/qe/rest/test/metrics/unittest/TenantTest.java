@@ -26,7 +26,7 @@ public class TenantTest extends MetricsTestBase {
 
     @SuppressWarnings("unchecked")
     @Test(priority = 2)
-    public void findTest(TenantParam tenant) {
+    public void findTest() {
         List<TenantParam> tenantsRx = getHawkularClient().metrics().getTenants();
         assertTenantsList(tenantsRx, (List<TenantParam>) getTenants());
     }

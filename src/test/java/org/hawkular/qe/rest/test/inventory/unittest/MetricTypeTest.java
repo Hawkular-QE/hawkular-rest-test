@@ -3,6 +3,8 @@ package org.hawkular.qe.rest.test.inventory.unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
+import org.hawkular.inventory.api.model.MetricDataType;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
@@ -54,13 +56,20 @@ public class MetricTypeTest extends InventoryTestBase {
 
     public static List<? extends Object> getMetricTypes() {
         List<MetricType> metricTypes = new ArrayList<>();
-        metricTypes.add(new MetricType(TENANT.getId(), "metrictype1", MetricUnit.BYTE));
-        metricTypes.add(new MetricType(TENANT.getId(), "_mt", MetricUnit.KILO_BYTE));
-        metricTypes.add(new MetricType(TENANT.getId(), "3mt_", MetricUnit.MILLI_SECOND));
-        metricTypes.add(new MetricType(TENANT.getId(), "mt-4", MetricUnit.MINUTE));
-        metricTypes.add(new MetricType(TENANT.getId(), "metrictype-withlooooooooooooooooooooooooooooooooongstring",
-                MetricUnit.NONE));
-        metricTypes.add(new MetricType(TENANT.getId(), "metrictypewith....dot", MetricUnit.SECONDS));
+        metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("metrictype1").get(),
+                MetricUnit.BYTE, MetricDataType.GAUGE));
+        metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("_mt").get(),
+                MetricUnit.MILLI_SECOND, MetricDataType.GAUGE));
+        metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("3mt_").get(),
+                MetricUnit.MINUTE, MetricDataType.COUNTER));
+        metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("mt-4").get(),
+                MetricUnit.NONE, MetricDataType.AVAILABILITY));
+        metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId())
+                .metricType("metrictype-withlooooooooooooooooooooooooooooooooongstring").get(),
+                MetricUnit.SECONDS, MetricDataType.COUNTER_RATE));
+        metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("metrictypewith....dot")
+                .get(),
+                MetricUnit.KILO_BYTE, MetricDataType.GAUGE));
         return metricTypes;
     }
 

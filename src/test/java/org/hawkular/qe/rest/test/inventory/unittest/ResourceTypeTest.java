@@ -1,8 +1,11 @@
 package org.hawkular.qe.rest.test.inventory.unittest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
@@ -51,16 +54,29 @@ public class ResourceTypeTest extends InventoryTestBase {
         return this.get2dArray((List<Object>) getResourceTypes());
     }
 
+    @SuppressWarnings("unchecked")
     public static List<? extends Object> getResourceTypes() {
+        HashMap<String, Object> properties = new HashMap<String, Object>();
         List<ResourceType> resourceTypes = new ArrayList<>();
-        resourceTypes.add(new ResourceType(TENANT.getId(), "resourcetype1", "v_1.0"));
-        resourceTypes.add(new ResourceType(TENANT.getId(), "_rt", "v_1.1"));
-        resourceTypes.add(new ResourceType(TENANT.getId(), "3rt_", "v_10.0"));
-        resourceTypes.add(new ResourceType(TENANT.getId(), "rt-4", "v_1.0.0.01"));
-        resourceTypes.add(new ResourceType(TENANT.getId(),
-                "resourcetype-withlooooooooooooooooooooooooooooooooongstring",
-                "v_1.0"));
-        resourceTypes.add(new ResourceType(TENANT.getId(), "resourcetypewith....dot", "v_1.0"));
+        properties.put("version", "v_1.0");
+        resourceTypes.add(new ResourceType(CanonicalPath.of().tenant(TENANT.getId()).resourceType("resourcetype1")
+                .get(), (Map<String, Object>) properties.clone()));
+        properties.put("version", "v_1.1");
+        resourceTypes.add(new ResourceType(CanonicalPath.of().tenant(TENANT.getId()).resourceType("_rt")
+                .get(), (Map<String, Object>) properties.clone()));
+        properties.put("version", "v_10.0");
+        resourceTypes.add(new ResourceType(CanonicalPath.of().tenant(TENANT.getId()).resourceType("3rt_")
+                .get(), (Map<String, Object>) properties.clone()));
+        properties.put("version", "v_1.0.0.01");
+        resourceTypes.add(new ResourceType(CanonicalPath.of().tenant(TENANT.getId()).resourceType("rt-4")
+                .get(), (Map<String, Object>) properties.clone()));
+        properties.put("version", "v_1.0");
+        resourceTypes.add(new ResourceType(CanonicalPath.of().tenant(TENANT.getId())
+                .resourceType("resourcetype-withlooooooooooooooooooooooooooooooooongstring")
+                .get(), (Map<String, Object>) properties.clone()));
+        resourceTypes.add(new ResourceType(CanonicalPath.of().tenant(TENANT.getId())
+                .resourceType("resourcetypewith....dot")
+                .get(), (Map<String, Object>) properties.clone()));
         return resourceTypes;
     }
 

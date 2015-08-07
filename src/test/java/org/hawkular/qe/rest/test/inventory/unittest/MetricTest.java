@@ -3,8 +3,10 @@ package org.hawkular.qe.rest.test.inventory.unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
+import org.hawkular.inventory.api.model.MetricDataType;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
@@ -29,11 +31,15 @@ public class MetricTest extends InventoryTestBase {
     @BeforeClass
     public void setup() {
         if (METRIC_TYPE == null) {
-            METRIC_TYPE = new MetricType(TENANT.getId(), METRIC_TYPE_ID, MetricUnit.MILLI_SECOND);
+            METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType(METRIC_TYPE_ID).get(),
+                    MetricUnit.MILLI_SECOND, MetricDataType.GAUGE);
         }
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
-        Assert.assertTrue(getHawkularClient().inventory()
-                .registerFeed(new Feed(TENANT.getId(), ENVIRONMENT_ID, FEED_ID)).isSuccess());
+        Assert.assertTrue(getHawkularClient()
+                .inventory()
+                .registerFeed(
+                        new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                                .get())).isSuccess());
         Assert.assertTrue(getHawkularClient().inventory().createMetricType(METRIC_TYPE).isSuccess());
     }
 
@@ -83,12 +89,16 @@ public class MetricTest extends InventoryTestBase {
 
     public List<? extends Object> getMetrics() {
         List<Metric> metrics = new ArrayList<>();
-        metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "metric1", METRIC_TYPE));
-        metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "_m", METRIC_TYPE));
-        metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "3metric-_", METRIC_TYPE));
-        metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "metric-2323", METRIC_TYPE));
-        metrics.add(new Metric(TENANT.getId(), ENVIRONMENT_ID, FEED_ID,
-                "metric-withlooooooooooooooooooooooooooooooooongstring", METRIC_TYPE));
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .metric("metric1").get(), METRIC_TYPE));
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .metric("_m").get(), METRIC_TYPE));
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .metric("3metric-_").get(), METRIC_TYPE));
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .metric("metric-2323").get(), METRIC_TYPE));
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .metric("metric-withlooooooooooooooooooooooooooooooooongstring").get(), METRIC_TYPE));
         return metrics;
     }
 

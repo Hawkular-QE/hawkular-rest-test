@@ -1,8 +1,10 @@
 package org.hawkular.qe.rest.test.inventory.unittest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
@@ -28,11 +30,17 @@ public class ResourceTest extends InventoryTestBase {
     @BeforeClass
     public void setup() {
         if (RESOURCE_TYPE == null) {
-            RESOURCE_TYPE = new ResourceType(TENANT.getId(), RESOURCE_TYPE_ID, "V1.0");
+            HashMap<String, Object> properties = new HashMap<String, Object>();
+            properties.put("version", "V1.0");
+            RESOURCE_TYPE = new ResourceType(CanonicalPath.of().tenant(TENANT.getId()).resourceType(RESOURCE_TYPE_ID)
+                    .get(), properties);
         }
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
-        Assert.assertTrue(getHawkularClient().inventory()
-                .registerFeed(new Feed(TENANT.getId(), ENVIRONMENT_ID, FEED_ID)).isSuccess());
+        Assert.assertTrue(getHawkularClient()
+                .inventory()
+                .registerFeed(
+                        new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                                .get())).isSuccess());
         Assert.assertTrue(getHawkularClient().inventory().createResourceType(RESOURCE_TYPE).isSuccess());
     }
 
@@ -55,7 +63,7 @@ public class ResourceTest extends InventoryTestBase {
     @Test(priority = 2)
     public void listTest() {
         List<Resource> resources = getHawkularClient().inventory().getResourcesByType(ENVIRONMENT_ID,
-                RESOURCE_TYPE_ID, RESOURCE_TYPE.getVersion().toString()).getEntity();
+                RESOURCE_TYPE_ID, RESOURCE_TYPE.getProperties().get("version").toString()).getEntity();
         Assert.assertNotNull(resources);
         _logger.debug("Number of Resources:[{}], list:[{}]", resources.size(), resources);
         assertResourcesList(resources, (List<Resource>) getResources());
@@ -86,13 +94,16 @@ public class ResourceTest extends InventoryTestBase {
 
     public static List<? extends Object> getResources() {
         List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "resource1", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "_r", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "3resource-_", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID, "resource-2323", RESOURCE_TYPE));
-        resources.add(new Resource(TENANT.getId(), ENVIRONMENT_ID, FEED_ID,
-                "resource-withlooooooooooooooooooooooooooooooooongstring", RESOURCE_TYPE));
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .resource("resource1").get(), RESOURCE_TYPE));
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .resource("_r").get(), RESOURCE_TYPE));
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .resource("3resource-_").get(), RESOURCE_TYPE));
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .resource("resource-2323").get(), RESOURCE_TYPE));
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+                .resource("resource-withlooooooooooooooooooooooooooooooooongstring").get(), RESOURCE_TYPE));
         return resources;
     }
-
 }

@@ -6,9 +6,11 @@ import java.util.List;
 
 import org.hawkular.client.metrics.model.AvailabilityDataPoint;
 import org.hawkular.client.metrics.model.GaugeDataPoint;
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
+import org.hawkular.inventory.api.model.MetricDataType;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.inventory.api.model.Resource;
@@ -119,26 +121,35 @@ public class WildFlyServerBase extends InventoryTestBase {
     }
 
     public static ResourceType getResourceType(Tenant tenant, RESOURCE_TYPES type) {
-        return new ResourceType(tenant.getId(), type.value(), "1.0");
+        HashMap<String, Object> properties = new HashMap<String, Object>();
+        properties.put("version", "1.0");
+        return new ResourceType(CanonicalPath.of().tenant(tenant.getId()).resourceType(type.value()).get(), properties);
     }
 
     public static Resource getResource(Tenant tenant, Environment environment, Feed feed, String resourceId,
             ResourceType resourceType) {
         HashMap<String, Object> properties = new HashMap<String, Object>();
         properties.put("name", resourceType.getId());
-        return new Resource(tenant.getId(), environment.getId(), feed.getId(),
-                getQualifiedResourceId(resourceId), resourceType, properties);
+        return new Resource(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
+                .feed(feed.getId()).resource(getQualifiedResourceId(resourceId)).get(), resourceType, properties);
     }
 
     public static MetricType getMetricType(Tenant tenant, METRIC_TYPES type) {
-        return new MetricType(tenant.getId(), type.value(), MetricUnit.NONE);
+        if (type.ordinal() == METRIC_TYPES.APP_SERVER.ordinal()) {
+            return new MetricType(CanonicalPath.of().tenant(tenant.getId()).metricType(type.value()).get(),
+                    MetricUnit.NONE, MetricDataType.AVAILABILITY);
+        } else {
+            return new MetricType(CanonicalPath.of().tenant(tenant.getId()).metricType(type.value()).get(),
+                    MetricUnit.NONE, MetricDataType.GAUGE);
+        }
     }
 
     public static Metric getMetric(Tenant tenant, Environment environment, Feed feed, String resourceId, METRICS metric) {
         HashMap<String, Object> properties = new HashMap<String, Object>();
         properties.put("name", METRIC_TYPES.values()[metric.ordinal()]);
-        return new Metric(tenant.getId(), environment.getId(), feed.getId(),
-                metric.value(resourceId), getMetricType(tenant, METRIC_TYPES.values()[metric.ordinal()]), properties);
+        return new Metric(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
+                .feed(feed.getId()).metric(metric.value(resourceId)).get(), getMetricType(tenant,
+                METRIC_TYPES.values()[metric.ordinal()]), properties);
     }
 
     public List<AvailabilityDataPoint> getAvailablityDataPoint(AvailabilityType availabilityType) {

@@ -3,6 +3,8 @@ package org.hawkular.qe.rest.test.inventory.unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.client.ClientResponse;
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
 import org.slf4j.Logger;
@@ -20,7 +22,8 @@ public class EnvironmentTest extends InventoryTestBase {
     @Test(dataProvider = "environmentDataProvider", priority = 1)
     public void creatTest(Environment environment) {
         _logger.debug("Creating environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
-        Assert.assertTrue(getHawkularClient().inventory().createEnvironment(environment).isSuccess());
+        ClientResponse<String> clientResponse = getHawkularClient().inventory().createEnvironment(environment);
+        Assert.assertTrue(clientResponse.isSuccess(), clientResponse.getErrorMsg());
     }
 
     @SuppressWarnings("unchecked")
@@ -44,7 +47,8 @@ public class EnvironmentTest extends InventoryTestBase {
     @Test(dataProvider = "environmentDataProvider", priority = 4)
     public void deleteTest(Environment environment) {
         _logger.debug("Deleting environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
-        Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(environment).isSuccess());
+        ClientResponse<String> clientResponse = getHawkularClient().inventory().deleteEnvironment(environment);
+        Assert.assertTrue(clientResponse.isSuccess(), clientResponse.getErrorMsg());
     }
 
     @SuppressWarnings("unchecked")
@@ -55,12 +59,13 @@ public class EnvironmentTest extends InventoryTestBase {
 
     public static List<? extends Object> getEnvironments() {
         List<Environment> environments = new ArrayList<>();
-        environments.add(new Environment(TENANT.getId(), "env1"));
-        environments.add(new Environment(TENANT.getId(), "_env"));
-        environments.add(new Environment(TENANT.getId(), "3env_"));
-        environments.add(new Environment(TENANT.getId(), "env-4"));
-        environments.add(new Environment(TENANT.getId(), "env-withlooooooooooooooooooooooooooooooooongstring"));
-        environments.add(new Environment(TENANT.getId(), "envwith.dot"));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("env1").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("_env").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("3env_").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("env-4").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
+                .environment("env-withlooooooooooooooooooooooooooooooooongstring").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("envwith.dot").get()));
         return environments;
     }
 }

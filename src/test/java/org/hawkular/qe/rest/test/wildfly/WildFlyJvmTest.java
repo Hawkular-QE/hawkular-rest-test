@@ -3,6 +3,7 @@ package org.hawkular.qe.rest.test.wildfly;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -54,7 +55,7 @@ public class WildFlyJvmTest extends WildFlyServerBase {
     @Test(dependsOnMethods = { "createEnvironment" })
     public void registerFeed() {
         //Register Feed
-        FEED = new Feed(TENANT.getId(), ENVIRONMENT.getId(), FEED_ID);
+        FEED = new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT.getId()).feed(FEED_ID).get());
         if (getHawkularClient().inventory().getFeed(FEED).getEntity() == null) {
             Assert.assertTrue(getHawkularClient().inventory().registerFeed(FEED).isSuccess(), "Feed creation failed");
             _logger.debug("Created Feed:[{}]", FEED);
@@ -147,8 +148,9 @@ public class WildFlyJvmTest extends WildFlyServerBase {
     public void validateMetricsData() {
 
         //Validate availability data        
-        Assert.assertTrue(AvailabilityType.fromString(getHawkularClient().metrics().getAvailabilityData(TENANT.getId(),
-                METRICS.APP_SERVER.value(RESOURCE_ID)).get(0).getValue()) == AvailabilityType.UP);
+        Assert.assertTrue(AvailabilityType.fromString(getHawkularClient().metrics()
+                .getAvailabilityData(TENANT.getId(),
+                        METRICS.APP_SERVER.value(RESOURCE_ID)).get(0).getValue()) == AvailabilityType.UP);
 
         //long endTimestamp = startTimestamp + (DATA_DELAY * DATA_SIZE);
 
