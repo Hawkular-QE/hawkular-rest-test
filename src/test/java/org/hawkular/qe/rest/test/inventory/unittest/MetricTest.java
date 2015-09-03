@@ -32,7 +32,7 @@ public class MetricTest extends InventoryTestBase {
     public void setup() {
         if (METRIC_TYPE == null) {
             METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType(METRIC_TYPE_ID).get(),
-                    MetricUnit.MILLI_SECOND, MetricDataType.GAUGE);
+                    MetricUnit.MILLISECONDS, MetricDataType.GAUGE);
         }
         Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
         Assert.assertTrue(getHawkularClient()

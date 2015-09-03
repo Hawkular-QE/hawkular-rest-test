@@ -57,11 +57,11 @@ public class MetricTypeTest extends InventoryTestBase {
     public static List<? extends Object> getMetricTypes() {
         List<MetricType> metricTypes = new ArrayList<>();
         metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("metrictype1").get(),
-                MetricUnit.BYTE, MetricDataType.GAUGE));
+                MetricUnit.BYTES, MetricDataType.GAUGE));
         metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("_mt").get(),
-                MetricUnit.MILLI_SECOND, MetricDataType.GAUGE));
+                MetricUnit.MILLISECONDS, MetricDataType.GAUGE));
         metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("3mt_").get(),
-                MetricUnit.MINUTE, MetricDataType.COUNTER));
+                MetricUnit.MINUTES, MetricDataType.COUNTER));
         metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("mt-4").get(),
                 MetricUnit.NONE, MetricDataType.AVAILABILITY));
         metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId())
@@ -69,7 +69,7 @@ public class MetricTypeTest extends InventoryTestBase {
                 MetricUnit.SECONDS, MetricDataType.COUNTER_RATE));
         metricTypes.add(new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType("metrictypewith....dot")
                 .get(),
-                MetricUnit.KILO_BYTE, MetricDataType.GAUGE));
+                MetricUnit.KILOBYTES, MetricDataType.GAUGE));
         return metricTypes;
     }
 
