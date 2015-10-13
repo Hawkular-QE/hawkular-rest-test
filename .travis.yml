@@ -7,4 +7,4 @@ branches:
 install:
 - mvn -version -B
 script:
-- mvn -s maven.settings.xml test -Dhawkular.url=${HAWKULAR_ENDPOINT}
+- mvn -s maven.settings.xml test -Dhawkular.url=${hawkular_url}
