@@ -9,7 +9,7 @@ endif::[]
 == Quickstart
 To build project,
 
-  mvn clean install -DskipTests
+  mvn -s maven.settings.xml clean install -DskipTests
 
 To create Eclipse project
 
@@ -17,12 +17,12 @@ To create Eclipse project
 
 To run test cases,
 
-  mvn test
+  mvn -s maven.settings.xml test
 
 Run test cases with your custom file
 
- mvn test -Dlog4j.file=/path/to/log4j-properties-file \
- -Dhawkular.file=/path/to/hawkular-properties-file
+ mvn -s maven.settings.xml test -Dlogback.configurationFile=/path/to/logback.xml \
+ -Dhawkular.restTest.propertiesFile=/path/to/hawkular-properties-file
 
 === Default Files
 
