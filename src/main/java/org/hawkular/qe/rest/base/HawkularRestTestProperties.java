@@ -22,9 +22,9 @@ public class HawkularRestTestProperties {
     private String hawkularPassword;
 
     public void loadProperties() {
-        this.setHawkularUrl(System.getProperty("hawkular_url"));
-        this.setHawkularUsername(System.getProperty("hawkular_username"));
-        this.setHawkularPassword(System.getProperty("hawkular_password"));
+        this.setHawkularUrl(System.getProperty("hawkular.url"));
+        this.setHawkularUsername(System.getProperty("hawkular.username"));
+        this.setHawkularPassword(System.getProperty("hawkular.password"));
     }
 
     public String getHawkularUrl() {
