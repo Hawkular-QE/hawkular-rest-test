@@ -40,7 +40,7 @@ public class HawkularRestTestBase {
 
     @BeforeSuite
     public void loadInitialProperties() throws URISyntaxException, Exception {
-        String propertiesFile = System.getProperty("hawkular.file");
+        String propertiesFile = System.getProperty("hawkular-rest-test-file");
 
         Properties properties = new Properties();
         if (propertiesFile == null) {
@@ -55,9 +55,8 @@ public class HawkularRestTestBase {
                 _logger.debug("{}={}", key, properties.getProperty((String) (key)));
             }
         }
-        HawkularRestTestProperties hawkularRestTestProperties = new HawkularRestTestProperties();
+        hawkularRestTestProperties = new HawkularRestTestProperties();
         hawkularRestTestProperties.loadProperties();
-        HawkularRestTestBase.setHawkularRestTestProperties(hawkularRestTestProperties);
         hawkularClient = new HawkularClient(
                 new URI(getHawkularRestTestProperties().getHawkularUrl()),
                 getHawkularRestTestProperties().getHawkularUsername(),
@@ -65,25 +64,8 @@ public class HawkularRestTestBase {
         _logger.debug("'HawkularClient' client loaded...");
     }
 
-    public Object[][] get2dArray(List<Object> list) {
-        if (list.size() == 0)
-            return new Object[0][0]; // avoid a null pointer exception
-        Object[][] array = new Object[list.size()][];
-        int i = 0;
-        for (Object item : list) {
-            array[i] = new Object[] { item };
-            i++;
-        }
-        return array;
-    }
-
     public static HawkularRestTestProperties getHawkularRestTestProperties() {
         return hawkularRestTestProperties;
-    }
-
-    public static void setHawkularRestTestProperties(
-            HawkularRestTestProperties hawkularRestTestProperties) {
-        HawkularRestTestBase.hawkularRestTestProperties = hawkularRestTestProperties;
     }
 
     public static HawkularClient getHawkularClient() {
@@ -96,5 +78,17 @@ public class HawkularRestTestBase {
 
     public static String getRandomId() {
         return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+    }
+
+    public Object[][] get2dArray(List<Object> list) {
+        if (list.size() == 0)
+            return new Object[0][0]; // avoid a null pointer exception
+        Object[][] array = new Object[list.size()][];
+        int i = 0;
+        for (Object item : list) {
+            array[i] = new Object[] { item };
+            i++;
+        }
+        return array;
     }
 }
