@@ -39,7 +39,7 @@ public class EnvironmentTest extends InventoryTestBase {
     public void creatTest(Environment environment) {
         _logger.debug("Creating environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
         ClientResponse<String> clientResponse = getHawkularClient().inventory().createEnvironment(environment);
-        Assert.assertTrue(clientResponse.isSuccess(), clientResponse.getErrorMsg());
+        Assert.assertTrue(clientResponse.isSuccess(), clientResponse.toString());
     }
 
     @SuppressWarnings("unchecked")
@@ -64,7 +64,8 @@ public class EnvironmentTest extends InventoryTestBase {
     public void deleteTest(Environment environment) {
         _logger.debug("Deleting environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
         ClientResponse<String> clientResponse = getHawkularClient().inventory().deleteEnvironment(environment);
-        Assert.assertTrue(clientResponse.isSuccess(), clientResponse.getErrorMsg());
+        _logger.debug("Delete Environment Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
     }
 
     @SuppressWarnings("unchecked")
@@ -75,13 +76,18 @@ public class EnvironmentTest extends InventoryTestBase {
 
     public static List<? extends Object> getEnvironments() {
         List<Environment> environments = new ArrayList<>();
-        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("env1").get()));
-        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("_env").get()));
-        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("3env_").get()));
-        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("env-4").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
+                .environment("env1" + getRandomId()).get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
+                .environment("_env" + getRandomId()).get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
+                .environment("3env_" + getRandomId()).get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
+                .environment("env-4" + getRandomId()).get()));
         environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
                 .environment("env-withlooooooooooooooooooooooooooooooooongstring").get()));
-        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId()).environment("envwith.dot").get()));
+        environments.add(new Environment(CanonicalPath.of().tenant(TENANT.getId())
+                .environment("envwith.dot").get()));
         return environments;
     }
 }

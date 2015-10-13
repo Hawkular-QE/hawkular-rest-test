@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hawkular.client.HawkularClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +40,8 @@ public class HawkularRestTestBase {
 
     @BeforeSuite
     public void loadInitialProperties() throws URISyntaxException, Exception {
-        String logProperties = System.getProperty("log4j.file");
         String propertiesFile = System.getProperty("hawkular.file");
 
-        if (logProperties != null) {
-            PropertyConfigurator.configure(new URL(logProperties));
-        } else {
-            PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j-logger.properties"));
-        }
         Properties properties = new Properties();
         if (propertiesFile == null) {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("hawkular-rest-test.properties"));
@@ -98,5 +92,9 @@ public class HawkularRestTestBase {
 
     public static Double getRandomDouble(Double min, Double max) {
         return min + (max - min) * random.nextDouble();
+    }
+
+    public static String getRandomId() {
+        return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
     }
 }
