@@ -24,6 +24,10 @@
   </appender>
 
   <logger level="DEBUG" name="org.hawkular.qe.rest"/>
+  <logger level="INFO" name="org.jboss.resteasy.plugins"/>
+  <logger level="DEBUG" name="org.hawkular.client" />
+  <logger level="DEBUG" name="org.hawkular.client.RequestLogger" />
+  <logger level="DEBUG" name="org.hawkular.client.ResponseLogger" />
 
   <root level="DEBUG">
     <appender-ref ref="STDOUT" />
