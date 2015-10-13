@@ -40,7 +40,7 @@ public class HawkularRestTestBase {
 
     @BeforeSuite
     public void loadInitialProperties() throws URISyntaxException, Exception {
-        String propertiesFile = System.getProperty("hawkular-rest-test-file");
+        String propertiesFile = System.getProperty("hawkular.restTest.propertiesFile");
 
         Properties properties = new Properties();
         if (propertiesFile == null) {
