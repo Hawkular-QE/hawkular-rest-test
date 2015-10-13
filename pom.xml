@@ -28,12 +28,12 @@
     <version>25</version>
   </parent>
   <groupId>org.hawkular.qe</groupId>
-  <artifactId>org.hawkular.qe.rest.java</artifactId>
+  <artifactId>hawkular-rest-test-java</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>hawkular-rest-test</name>
-  <description>Hawkular REST QE Test freamework</description>
+  <name>hawkular-rest-test-java</name>
+  <description>Hawkular REST QE Test freamework (Java)</description>
   <url>https://github.com/Hawkular-QE/hawkular-rest-test</url>
   <organization>
     <name>Red Hat, Inc.</name>
