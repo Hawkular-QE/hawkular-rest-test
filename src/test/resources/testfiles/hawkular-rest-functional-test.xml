@@ -79,4 +79,10 @@
       </class>
     </classes>
   </test>
+  <test name="Trigger-Condition-tests">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.alerts.ConditionsTest">
+      </class>
+    </classes>
+  </test>
 </suite>
