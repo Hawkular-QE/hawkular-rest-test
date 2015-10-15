@@ -16,19 +16,33 @@
  */
 package org.hawkular.qe.rest.alerts;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
+import org.hawkular.alerts.api.model.data.MixedData;
+import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.ClientResponse;
-import org.hawkular.qe.rest.base.metrics.MetricsTestBase;
+import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.qe.rest.base.HawkularRestTestBase;
+import org.hawkular.qe.rest.mapper.RandomDouble;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
-public class AlertsTestBase extends MetricsTestBase {
+public class AlertsTestBase extends HawkularRestTestBase {
+
+    public static Tenant TENANT;
+
+    @BeforeClass
+    public void loadBefore() {
+        TENANT = getHawkularClient().inventory().getTenant().getEntity();
+    }
 
     public void createTrigger(Trigger trigger) {
         ClientResponse<Trigger> triggerCreateResult = getHawkularClient().alerts().createTrigger(trigger);
@@ -67,4 +81,69 @@ public class AlertsTestBase extends MetricsTestBase {
         Assert.assertTrue(deleteResult.isSuccess());
     }
 
+    public void sendData(MixedData mixedData) {
+        //Send Mixed data
+        ClientResponse<String> sendDataResult = getHawkularClient().alerts().sendData(mixedData);
+        _logger.debug("Send Alert Mixed data Status: " + sendDataResult);
+        Assert.assertTrue(sendDataResult.isSuccess());
+    }
+
+    public List<Alert> getAlerts(String triggerId) {
+        //Send Mixed data
+        ClientResponse<List<Alert>> alertsResult = getHawkularClient().alerts().findAlerts(null, null, null,
+                triggerId, null, null, null, null);
+        _logger.debug("Alert Status: " + alertsResult);
+        Assert.assertTrue(alertsResult.isSuccess());
+        return alertsResult.getEntity();
+    }
+
+    public void acknowledgeAlerts(String alertIds, String ackBy, String ackNotes) {
+        ClientResponse<String> acknowleResult = getHawkularClient().alerts().ackAlerts(alertIds, ackBy, ackNotes);
+        _logger.debug("Acknowledge Status:[{}]", acknowleResult);
+        Assert.assertTrue(acknowleResult.isSuccess());
+    }
+
+    public Integer deleteAlerts(String alertIds) {
+        ClientResponse<Integer> deleteResult = getHawkularClient().alerts().deleteAlerts(null, null, alertIds, null,
+                null, null, null);
+        _logger.debug("Delete Status:[{}]", deleteResult);
+        Assert.assertTrue(deleteResult.isSuccess());
+        return deleteResult.getEntity();
+
+    }
+
+    public String getAlertIds(List<Alert> alerts) {
+        StringBuilder alertIds = new StringBuilder();
+        for (Alert alert : alerts) {
+            if (alertIds.length() == 0) {
+                alertIds.append(alert.getAlertId());
+            } else {
+                alertIds.append(",").append(alert.getAlertId());
+            }
+        }
+        return alertIds.toString();
+    }
+
+    public List<NumericData> getNumericData(RandomDouble randomDouble) {
+        List<NumericData> numericDataList = new ArrayList<NumericData>();
+        long firstDataTimestamp = System.currentTimeMillis() - (randomDouble.getCount() * randomDouble.getDelay());
+        for (long count = 0; count < randomDouble.getCount(); count++) {
+            numericDataList.add(new NumericData(randomDouble.getId(), firstDataTimestamp
+                    + (count * randomDouble.getDelay()),
+                    getRandomDouble(randomDouble.getMinLimit(), randomDouble.getMaxLimit())));
+        }
+        return numericDataList;
+    }
+
+    public Double getGtValue(List<NumericData> numericDataList) {
+        Double gtValue = null;
+        for (NumericData numericData : numericDataList) {
+            if (gtValue == null) {
+                gtValue = numericData.getValue();
+            } else if (gtValue < numericData.getValue()) {
+                gtValue = numericData.getValue();
+            }
+        }
+        return gtValue;
+    }
 }

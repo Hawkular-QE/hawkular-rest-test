@@ -85,9 +85,16 @@
       </class>
     </classes>
   </test>
-    <test name="Conditions-Unit-tests">
+  <test name="Conditions-Unit-tests">
     <classes>
-      <class name="org.hawkular.qe.rest.test.alerts.unittest.ConditionsUnitTest">
+      <class
+        name="org.hawkular.qe.rest.test.alerts.unittest.ConditionsUnitTest">
+      </class>
+    </classes>
+  </test>
+  <test name="Conditions-LifeCycle">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.alerts.ConditionsTest">
       </class>
     </classes>
   </test>

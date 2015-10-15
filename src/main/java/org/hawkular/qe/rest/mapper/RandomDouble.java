@@ -22,10 +22,11 @@ package org.hawkular.qe.rest.mapper;
 public class RandomDouble {
     private String tenantId;
     private String id;
-    private double minValue;
-    private double maxValue;
+    private double minLimit;
+    private double maxLimit;
     private long count;
     private long delay;
+
 
     public RandomDouble() {
 
@@ -34,8 +35,8 @@ public class RandomDouble {
     public RandomDouble(String tenantId, String id, double minValue, double maxValue, long count, long delay) {
         this.tenantId = tenantId;
         this.id = id;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
+        this.minLimit = minValue;
+        this.maxLimit = maxValue;
         this.count = count;
         this.delay = delay;
     }
@@ -44,8 +45,8 @@ public class RandomDouble {
         StringBuilder builder = new StringBuilder();
         builder.append("Tenant Id:").append(this.tenantId);
         builder.append(", Id:").append(this.id);
-        builder.append(", Min Value:").append(this.minValue);
-        builder.append(", Max Value:").append(this.maxValue);
+        builder.append(", Min Value:").append(this.minLimit);
+        builder.append(", Max Value:").append(this.maxLimit);
         builder.append(", Count:").append(this.count);
         builder.append(", Delay:").append(this.delay);
         return builder.toString();
@@ -59,20 +60,20 @@ public class RandomDouble {
         this.id = id;
     }
 
-    public double getMinValue() {
-        return minValue;
+    public double getMinLimit() {
+        return minLimit;
     }
 
-    public void setMinValue(double lowValue) {
-        this.minValue = lowValue;
+    public void setMinLimit(double lowValue) {
+        this.minLimit = lowValue;
     }
 
-    public double getMaxValue() {
-        return maxValue;
+    public double getMaxLimit() {
+        return maxLimit;
     }
 
-    public void setMaxValue(double highValue) {
-        this.maxValue = highValue;
+    public void setMaxLimit(double highValue) {
+        this.maxLimit = highValue;
     }
 
     public long getCount() {

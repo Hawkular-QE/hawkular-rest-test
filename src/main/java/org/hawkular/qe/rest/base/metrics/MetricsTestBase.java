@@ -79,8 +79,8 @@ public class MetricsTestBase extends HawkularRestTestBase {
         for (long count = 0; count < randomDouble.getCount(); count++) {
             gaugeDataPoints.add(new GaugeDataPoint(new DataPoint<Double>(
                     (System.currentTimeMillis() + (count * randomDouble.getDelay())), getRandomDouble(
-                            randomDouble.getMinValue(),
-                            randomDouble.getMaxValue()))));
+                            randomDouble.getMinLimit(),
+                            randomDouble.getMaxLimit()))));
         }
         return gaugeDataPoints;
     }
