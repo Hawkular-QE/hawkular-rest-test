@@ -79,9 +79,15 @@
       </class>
     </classes>
   </test>
-  <test name="Trigger-Condition-tests">
+  <test name="Trigger-Unit-tests">
     <classes>
-      <class name="org.hawkular.qe.rest.test.alerts.ConditionsTest">
+      <class name="org.hawkular.qe.rest.test.alerts.unittest.TriggerUnitTest">
+      </class>
+    </classes>
+  </test>
+    <test name="Conditions-Unit-tests">
+    <classes>
+      <class name="org.hawkular.qe.rest.test.alerts.unittest.ConditionsUnitTest">
       </class>
     </classes>
   </test>
