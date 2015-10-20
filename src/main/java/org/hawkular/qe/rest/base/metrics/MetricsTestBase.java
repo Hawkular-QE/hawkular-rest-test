@@ -24,7 +24,7 @@ import org.hawkular.client.metrics.model.TenantParam;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.metrics.core.api.DataPoint;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
-import org.hawkular.qe.rest.mapper.RandomDouble;
+import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 

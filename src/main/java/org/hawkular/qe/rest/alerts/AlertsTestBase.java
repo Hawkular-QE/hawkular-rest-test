@@ -26,9 +26,10 @@ import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.ClientResponse;
+import org.hawkular.client.alert.model.AlertsParams;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
-import org.hawkular.qe.rest.mapper.RandomDouble;
+import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
@@ -88,10 +89,9 @@ public class AlertsTestBase extends HawkularRestTestBase {
         Assert.assertTrue(sendDataResult.isSuccess());
     }
 
-    public List<Alert> getAlerts(String triggerId) {
+    public List<Alert> getAlerts(AlertsParams alertsParams) {
         //Send Mixed data
-        ClientResponse<List<Alert>> alertsResult = getHawkularClient().alerts().findAlerts(null, null, null,
-                triggerId, null, null, null, null);
+        ClientResponse<List<Alert>> alertsResult = getHawkularClient().alerts().findAlerts(alertsParams);
         _logger.debug("Alert Status: " + alertsResult);
         Assert.assertTrue(alertsResult.isSuccess());
         return alertsResult.getEntity();
@@ -103,9 +103,8 @@ public class AlertsTestBase extends HawkularRestTestBase {
         Assert.assertTrue(acknowleResult.isSuccess());
     }
 
-    public Integer deleteAlerts(String alertIds) {
-        ClientResponse<Integer> deleteResult = getHawkularClient().alerts().deleteAlerts(null, null, alertIds, null,
-                null, null, null);
+    public Integer deleteAlerts(AlertsParams alertsParams) {
+        ClientResponse<Integer> deleteResult = getHawkularClient().alerts().deleteAlerts(alertsParams);
         _logger.debug("Delete Status:[{}]", deleteResult);
         Assert.assertTrue(deleteResult.isSuccess());
         return deleteResult.getEntity();

@@ -28,8 +28,9 @@ import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.alerts.api.model.trigger.Match;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
+import org.hawkular.client.alert.model.AlertsParams;
 import org.hawkular.qe.rest.alerts.AlertsTestBase;
-import org.hawkular.qe.rest.mapper.RandomDouble;
+import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -78,10 +79,14 @@ public class ConditionsTest extends AlertsTestBase {
         //Add data
         sendData(mixedData);
 
+        //Update Alerts Params
+        AlertsParams alertsParams = new AlertsParams();
+        alertsParams.setTriggerIds(triggerId);
+
         //Check is there any alert, wait and check for at least 10 seconds
         List<Alert> alerts = null;
         for (int count = 0; count < 20; count++) {
-            alerts = getAlerts(triggerId);
+            alerts = getAlerts(alertsParams);
             if (alerts != null && !alerts.isEmpty()) {
                 break;
             }
@@ -100,12 +105,13 @@ public class ConditionsTest extends AlertsTestBase {
 
         //Acknowledge alert
         String alertIds = getAlertIds(alerts);
+        alertsParams.setAlertIds(alertIds);
 
         if (alertIds != null) {
             //Acknowledge alerts
             acknowledgeAlerts(alertIds, "rest-test-automation", "This alert acknowledged by REST test automation");
             //Delete alert
-            int deleteAlertsCount = deleteAlerts(alertIds);
+            int deleteAlertsCount = deleteAlerts(alertsParams);
             _logger.debug("Number of alerts deleted:{}", deleteAlertsCount);
             Assert.assertEquals(deleteAlertsCount, alerts.size());
         }
