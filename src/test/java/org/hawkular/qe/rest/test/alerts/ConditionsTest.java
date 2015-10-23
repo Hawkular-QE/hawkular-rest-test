@@ -29,7 +29,8 @@ import org.hawkular.alerts.api.model.trigger.Match;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.alert.model.AlertsParams;
-import org.hawkular.qe.rest.alerts.AlertsTestBase;
+import org.hawkular.qe.rest.alerts.ValidateConditions;
+import org.hawkular.qe.rest.alerts.model.ConditionsModel;
 import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,24 +38,49 @@ import org.testng.annotations.Test;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
-public class ConditionsTest extends AlertsTestBase {
+public class ConditionsTest extends ValidateConditions {
 
     @Test(priority = 1)
     public void testThresholdConditionGT() {
+        testThresholdCondition(Operator.GT, Match.ANY);
+    }
+
+    @Test(priority = 2)
+    public void testThresholdConditionGTE() {
+        testThresholdCondition(Operator.GTE, Match.ANY);
+    }
+
+    @Test(priority = 3)
+    public void testThresholdConditionLT() {
+        testThresholdCondition(Operator.LT, Match.ANY);
+    }
+
+    @Test(priority = 4)
+    public void testThresholdConditionLTE() {
+        testThresholdCondition(Operator.LTE, Match.ANY);
+    }
+
+    public void testThresholdCondition(Operator operator, Match match) {
+        _logger.debug("Testing condition:{}", operator.toString());
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
         String triggerId = "trigger-id-" + getRandomId();
 
-        double gtValue = getRandomDouble(0.0, 100.0);
+        double valueMin = getRandomDouble(0.0, 1000.0);
+        double valueMax = getRandomDouble(valueMin, 1000000.0);
+
+        _logger.debug("Selected Values[Min:{}, Max:{}]", valueMin, valueMax);
 
         Trigger trigger = new Trigger(triggerId, "Trigger Name " + triggerId);
-        trigger.setFiringMatch(Match.ANY);
+        trigger.setFiringMatch(match);
 
         //Create Trigger
         createTrigger(trigger);
 
         //Setup new conditions
         List<Condition> conditions = new ArrayList<>();
-        conditions.add(new ThresholdCondition(triggerId, Mode.FIRING, dataId, Operator.GT, gtValue));
+        conditions.add(
+                new ThresholdCondition(triggerId, Mode.FIRING, dataId, operator,
+                        getRandomDouble(valueMin, valueMax)));
 
         //Add Conditions in to trigger
         addTriggerCondition(trigger, conditions, Mode.FIRING);
@@ -68,20 +94,29 @@ public class ConditionsTest extends AlertsTestBase {
         //Add Mixed Data
 
         //Prepare data
-        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, 0.0, 100.0, 10, 1000);
+        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, valueMin, valueMax, 10, 1000);
         List<NumericData> numericDataList = getNumericData(randomDouble);
-
-        boolean alertShouldTrigger = getGtValue(numericDataList) >= gtValue;
 
         MixedData mixedData = new MixedData();
         mixedData.setNumericData(numericDataList);
+
+        validateAndDelete(trigger, conditions, mixedData, Match.ANY);
+
+    }
+
+    private void validateAndDelete(Trigger trigger, List<Condition> conditions, MixedData mixedData, Match match) {
+        //Validate locally
+        ConditionsModel conditionsModel = new ConditionsModel(conditions, mixedData, match);
+        validateConditions(conditionsModel);
+
+        _logger.debug("Local validations Result:[{}]", conditionsModel.getTriggeredConditionsMap());
 
         //Add data
         sendData(mixedData);
 
         //Update Alerts Params
         AlertsParams alertsParams = new AlertsParams();
-        alertsParams.setTriggerIds(triggerId);
+        alertsParams.setTriggerIds(trigger.getId());
 
         //Check is there any alert, wait and check for at least 10 seconds
         List<Alert> alerts = null;
@@ -96,24 +131,25 @@ public class ConditionsTest extends AlertsTestBase {
                 _logger.error("Exception on thread sleep, ", ex);
             }
         }
-
-        if (alerts != null && !alerts.isEmpty()) {
-            Assert.assertTrue(alertShouldTrigger, "Alerts should be not triggered");
-        } else {
-            Assert.assertFalse(alertShouldTrigger, "Alerts should be triggered");
+        if (alerts == null) {
+            alerts = new ArrayList<Alert>();
         }
 
-        //Acknowledge alert
-        String alertIds = getAlertIds(alerts);
-        alertsParams.setAlertIds(alertIds);
+        Assert.assertEquals(alerts.size(), conditionsModel.getTotalTriggeredCount(), "Triggers count validation");
 
-        if (alertIds != null) {
-            //Acknowledge alerts
-            acknowledgeAlerts(alertIds, "rest-test-automation", "This alert acknowledged by REST test automation");
-            //Delete alert
-            int deleteAlertsCount = deleteAlerts(alertsParams);
-            _logger.debug("Number of alerts deleted:{}", deleteAlertsCount);
-            Assert.assertEquals(deleteAlertsCount, alerts.size());
+        if (alerts.size() > 0) {
+            //Acknowledge alert
+            String alertIds = getAlertIds(alerts);
+            alertsParams.setAlertIds(alertIds);
+
+            if (alertIds != null) {
+                //Acknowledge alerts
+                acknowledgeAlerts(alertIds, "rest-test-automation", "This alert acknowledged by REST test automation");
+                //Delete alert
+                int deleteAlertsCount = deleteAlerts(alertsParams);
+                _logger.debug("Number of alerts deleted:{}", deleteAlertsCount);
+                Assert.assertEquals(deleteAlertsCount, alerts.size());
+            }
         }
 
         //Remove Conditions
@@ -121,6 +157,6 @@ public class ConditionsTest extends AlertsTestBase {
 
         //Remove Trigger
         deleteTrigger(trigger);
-    }
 
+    }
 }

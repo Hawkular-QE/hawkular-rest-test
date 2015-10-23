@@ -20,7 +20,7 @@ import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.data.NumericData;
-import org.hawkular.qe.rest.model.ConditionsModel;
+import org.hawkular.qe.rest.alerts.model.ConditionsModel;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -56,22 +56,22 @@ public class ValidateConditions extends AlertsTestBase {
             switch (condition.getOperator()) {
                 case GT:
                     if (data.getValue() > condition.getThreshold()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case GTE:
                     if (data.getValue() >= condition.getThreshold()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case LT:
                     if (data.getValue() < condition.getThreshold()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case LTE:
                     if (data.getValue() <= condition.getThreshold()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 default:
@@ -85,16 +85,16 @@ public class ValidateConditions extends AlertsTestBase {
             switch (condition.getOperatorLow()) {
                 case INCLUSIVE:
                     if (condition.isInRange() && data.getValue() >= condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     } else if (!condition.isInRange() && data.getValue() <= condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case EXCLUSIVE:
                     if (condition.isInRange() && data.getValue() > condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     } else if (!condition.isInRange() && data.getValue() < condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 default:
@@ -103,16 +103,16 @@ public class ValidateConditions extends AlertsTestBase {
             switch (condition.getOperatorHigh()) {
                 case INCLUSIVE:
                     if (condition.isInRange() && data.getValue() <= condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     } else if (!condition.isInRange() && data.getValue() >= condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case EXCLUSIVE:
                     if (condition.isInRange() && data.getValue() < condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     } else if (!condition.isInRange() && data.getValue() > condition.getThresholdLow()) {
-                        conditionsModel.getTriggeredConditions().add(condition);
+                        conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 default:

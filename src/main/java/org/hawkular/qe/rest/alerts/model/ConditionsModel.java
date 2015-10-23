@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.qe.rest.model;
+package org.hawkular.qe.rest.alerts.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
@@ -33,14 +34,14 @@ public class ConditionsModel {
     private List<Condition> conditions;
     private MixedData mixedData;
     private Match match;
-    private List<Condition> triggeredConditions = new ArrayList<Condition>();
+    private Map<String, TriggeredCondition> triggeredConditions = new HashMap<String, TriggeredCondition>();
     private List<Alert> alerts;
 
-    private ConditionsModel() {
+    public ConditionsModel() {
 
     }
 
-    private ConditionsModel(List<Condition> conditions, MixedData mixedData, Match match) {
+    public ConditionsModel(List<Condition> conditions, MixedData mixedData, Match match) {
         this.conditions = conditions;
         this.mixedData = mixedData;
         this.match = match;
@@ -86,7 +87,33 @@ public class ConditionsModel {
         this.alerts = alerts;
     }
 
-    public List<Condition> getTriggeredConditions() {
+    public Map<String, TriggeredCondition> getTriggeredConditionsMap() {
         return triggeredConditions;
+    }
+
+    public TriggeredCondition getTriggeredCondition(String conditionId) {
+        if (triggeredConditions.get(conditionId) == null) {
+            triggeredConditions.put(conditionId, new TriggeredCondition());
+        }
+        return triggeredConditions.get(conditionId);
+    }
+
+    public TriggeredCondition getTriggeredCondition(Condition condition) {
+        if (triggeredConditions.get(condition.getConditionId()) == null) {
+            triggeredConditions.put(condition.getConditionId(), new TriggeredCondition(condition));
+        }
+        return triggeredConditions.get(condition.getConditionId());
+    }
+
+    public void increaseTriggeredConditionCount(Condition condition) {
+        this.getTriggeredCondition(condition).increaseTriggeredCount();
+    }
+
+    public int getTotalTriggeredCount() {
+        int count = 0;
+        for (String conditionKey : triggeredConditions.keySet()) {
+            count += triggeredConditions.get(conditionKey).getTriggeredCount();
+        }
+        return count;
     }
 }

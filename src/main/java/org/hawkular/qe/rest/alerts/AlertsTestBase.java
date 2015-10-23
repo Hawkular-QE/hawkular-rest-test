@@ -133,16 +133,4 @@ public class AlertsTestBase extends HawkularRestTestBase {
         }
         return numericDataList;
     }
-
-    public Double getGtValue(List<NumericData> numericDataList) {
-        Double gtValue = null;
-        for (NumericData numericData : numericDataList) {
-            if (gtValue == null) {
-                gtValue = numericData.getValue();
-            } else if (gtValue < numericData.getValue()) {
-                gtValue = numericData.getValue();
-            }
-        }
-        return gtValue;
-    }
 }

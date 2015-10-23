@@ -18,7 +18,7 @@
 
 -->
 <suite name="HawkularRestFunctionalTest">
-  <test name="Inventory-ReachableTest">
+  <!-- <test name="Inventory-ReachableTest">
     <classes>
       <class
         name="org.hawkular.qe.rest.test.inventory.unittest.ReachableTest" />
@@ -91,7 +91,7 @@
         name="org.hawkular.qe.rest.test.alerts.unittest.ConditionsUnitTest">
       </class>
     </classes>
-  </test>
+  </test> -->
   <test name="Conditions-LifeCycle">
     <classes>
       <class name="org.hawkular.qe.rest.test.alerts.ConditionsTest">
