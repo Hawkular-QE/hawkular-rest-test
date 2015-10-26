@@ -145,7 +145,7 @@ public class WildFlyServerBase extends InventoryTestBase {
     public static Resource getResource(Tenant tenant, Environment environment, Feed feed, String resourceId,
             ResourceType resourceType) {
         HashMap<String, Object> properties = new HashMap<String, Object>();
-        properties.put("name", resourceType.getId());
+        //properties.put("name", resourceType.getId());
         return new Resource(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
                 .feed(feed.getId()).resource(getQualifiedResourceId(resourceId)).get(), resourceType, properties);
     }
@@ -163,7 +163,7 @@ public class WildFlyServerBase extends InventoryTestBase {
     public static Metric getMetric(Tenant tenant, Environment environment,
             Feed feed, String resourceId, METRICS metric) {
         HashMap<String, Object> properties = new HashMap<String, Object>();
-        properties.put("name", METRIC_TYPES.values()[metric.ordinal()]);
+        //properties.put("name", METRIC_TYPES.values()[metric.ordinal()]);
         return new Metric(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
                 .feed(feed.getId()).metric(metric.value(resourceId)).get(), getMetricType(tenant,
                 METRIC_TYPES.values()[metric.ordinal()]), properties);
