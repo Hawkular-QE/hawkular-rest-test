@@ -23,6 +23,7 @@ import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition.Operator;
+import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.alerts.api.model.trigger.Match;
@@ -39,6 +40,8 @@ import org.testng.annotations.Test;
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public class ConditionsTest extends ValidateConditions {
+    public static final double doubleMinValue = 0.0;
+    public static final double doubleMaxValue = 1000000.0;
 
     @Test(priority = 1)
     public void testThresholdConditionGT() {
@@ -60,17 +63,41 @@ public class ConditionsTest extends ValidateConditions {
         testThresholdCondition(Operator.LTE, Match.ANY);
     }
 
+    @Test(priority = 5)
+    public void testThresholdRangeConditionLinHinRin() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                true, Match.ANY);
+    }
+
+    @Test(priority = 6)
+    public void testThresholdRangeConditionLinHexRin() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                true, Match.ANY);
+    }
+
+    @Test(priority = 7)
+    public void testThresholdRangeConditionLexHexRin() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                true, Match.ANY);
+    }
+
     public void testThresholdCondition(Operator operator, Match match) {
         _logger.debug("Testing condition:{}", operator.toString());
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
         String triggerId = "trigger-id-" + getRandomId();
 
-        double valueMin = getRandomDouble(0.0, 1000.0);
-        double valueMax = getRandomDouble(valueMin, 1000000.0);
+        double valueMin = getRandomDouble(doubleMinValue, 1000.0);
+        double valueMax = getRandomDouble(valueMin, doubleMaxValue);
 
         _logger.debug("Selected Values[Min:{}, Max:{}]", valueMin, valueMax);
 
-        Trigger trigger = new Trigger(triggerId, "Trigger Name " + triggerId);
+        Trigger trigger = new Trigger(triggerId, "Trigger Name Threshold" + triggerId);
         trigger.setFiringMatch(match);
 
         //Create Trigger
@@ -91,10 +118,62 @@ public class ConditionsTest extends ValidateConditions {
         //Update Trigger
         updateTrigger(trigger.getId(), trigger);
 
-        //Add Mixed Data
-
         //Prepare data
         RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, valueMin, valueMax, 10, 1000);
+        List<NumericData> numericDataList = getNumericData(randomDouble);
+
+        MixedData mixedData = new MixedData();
+        mixedData.setNumericData(numericDataList);
+
+        validateAndDelete(trigger, conditions, mixedData, Match.ANY);
+
+    }
+
+    public void testThresholdRangeCondition(
+            org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator operatorLow,
+            org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator operatorHigh,
+            boolean inRange,
+            Match match) {
+
+        _logger.debug("Testing condition:[OperatorLow:{}, OperatorHigh:{}, InRange:{}]",
+                operatorLow.toString(), operatorHigh, inRange);
+
+        String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
+        String triggerId = "trigger-id-" + getRandomId();
+
+        double rangeMin = getRandomDouble(doubleMinValue, 10000.0);
+        double rangeMax = getRandomDouble(rangeMin, doubleMaxValue);
+
+        _logger.debug("Selected Values[RangeMin:{}, RangeMax:{}]", rangeMin, rangeMax);
+
+        Trigger trigger = new Trigger(triggerId, "Trigger Name ThresholdRange" + triggerId);
+        trigger.setFiringMatch(match);
+
+        //Create Trigger
+        createTrigger(trigger);
+
+        //Setup new conditions
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(
+                new ThresholdRangeCondition(
+                        triggerId,
+                        Mode.FIRING,
+                        dataId,
+                        operatorLow, operatorHigh,
+                        rangeMin, rangeMax,
+                        inRange));
+
+        //Add Conditions in to trigger
+        addTriggerCondition(trigger, conditions, Mode.FIRING);
+
+        //Enable Trigger
+        trigger.setEnabled(true);
+
+        //Update Trigger
+        updateTrigger(trigger.getId(), trigger);
+
+        //Prepare data
+        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, doubleMinValue, doubleMaxValue, 10, 1000);
         List<NumericData> numericDataList = getNumericData(randomDouble);
 
         MixedData mixedData = new MixedData();
