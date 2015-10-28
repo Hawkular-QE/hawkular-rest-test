@@ -87,6 +87,46 @@ public class ConditionsTest extends ValidateConditions {
                 true, Match.ANY);
     }
 
+    @Test(priority = 8)
+    public void testThresholdRangeConditionLexHinRin() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                true, Match.ANY);
+    }
+
+    @Test(priority = 9)
+    public void testThresholdRangeConditionLinHinRout() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                false, Match.ANY);
+    }
+
+    @Test(priority = 10)
+    public void testThresholdRangeConditionLinHexRout() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                false, Match.ANY);
+    }
+
+    @Test(priority = 11)
+    public void testThresholdRangeConditionLexHexRout() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                false, Match.ANY);
+    }
+
+    @Test(priority = 12)
+    public void testThresholdRangeConditionLexHinRout() {
+        testThresholdRangeCondition(
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
+                org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
+                false, Match.ANY);
+    }
+
     public void testThresholdCondition(Operator operator, Match match) {
         _logger.debug("Testing condition:{}", operator.toString());
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
