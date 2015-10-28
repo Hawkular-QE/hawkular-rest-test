@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hawkular.alerts.api.model.condition.Alert;
+import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition.Operator;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
+import org.hawkular.alerts.api.model.data.Availability;
 import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.alerts.api.model.trigger.Match;
@@ -32,6 +34,7 @@ import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.alert.model.AlertsParams;
 import org.hawkular.qe.rest.alerts.ValidateConditions;
 import org.hawkular.qe.rest.alerts.model.ConditionsModel;
+import org.hawkular.qe.rest.model.RandomAvailability;
 import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,30 +43,35 @@ import org.testng.annotations.Test;
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public class ConditionsTest extends ValidateConditions {
+    public static final long delayTime = 1000;
+
     public static final double doubleMinValue = 0.0;
     public static final double doubleMaxValue = 1000000.0;
 
-    @Test(priority = 1)
+    public static final int dataCountMin = 5;
+    public static final int dataCountMax = 30;
+
+    @Test(priority = 0)
     public void testThresholdConditionGT() {
         testThresholdCondition(Operator.GT, Match.ANY);
     }
 
-    @Test(priority = 2)
+    @Test(priority = 0)
     public void testThresholdConditionGTE() {
         testThresholdCondition(Operator.GTE, Match.ANY);
     }
 
-    @Test(priority = 3)
+    @Test(priority = 0)
     public void testThresholdConditionLT() {
         testThresholdCondition(Operator.LT, Match.ANY);
     }
 
-    @Test(priority = 4)
+    @Test(priority = 0)
     public void testThresholdConditionLTE() {
         testThresholdCondition(Operator.LTE, Match.ANY);
     }
 
-    @Test(priority = 5)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLinHinRin() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
@@ -71,7 +79,7 @@ public class ConditionsTest extends ValidateConditions {
                 true, Match.ANY);
     }
 
-    @Test(priority = 6)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLinHexRin() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
@@ -79,7 +87,7 @@ public class ConditionsTest extends ValidateConditions {
                 true, Match.ANY);
     }
 
-    @Test(priority = 7)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLexHexRin() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
@@ -87,7 +95,7 @@ public class ConditionsTest extends ValidateConditions {
                 true, Match.ANY);
     }
 
-    @Test(priority = 8)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLexHinRin() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
@@ -95,7 +103,7 @@ public class ConditionsTest extends ValidateConditions {
                 true, Match.ANY);
     }
 
-    @Test(priority = 9)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLinHinRout() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
@@ -103,7 +111,7 @@ public class ConditionsTest extends ValidateConditions {
                 false, Match.ANY);
     }
 
-    @Test(priority = 10)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLinHexRout() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
@@ -111,7 +119,7 @@ public class ConditionsTest extends ValidateConditions {
                 false, Match.ANY);
     }
 
-    @Test(priority = 11)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLexHexRout() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
@@ -119,12 +127,33 @@ public class ConditionsTest extends ValidateConditions {
                 false, Match.ANY);
     }
 
-    @Test(priority = 12)
+    @Test(priority = 1)
     public void testThresholdRangeConditionLexHinRout() {
         testThresholdRangeCondition(
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.EXCLUSIVE,
                 org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator.INCLUSIVE,
                 false, Match.ANY);
+    }
+
+    @Test(priority = 2)
+    public void testAvailabilityUp() {
+        testAvailabilityCondition(
+                org.hawkular.alerts.api.model.condition.AvailabilityCondition.Operator.UP,
+                Match.ANY);
+    }
+
+    @Test(priority = 2)
+    public void testAvailabilityDown() {
+        testAvailabilityCondition(
+                org.hawkular.alerts.api.model.condition.AvailabilityCondition.Operator.DOWN,
+                Match.ANY);
+    }
+
+    @Test(priority = 2)
+    public void testAvailabilityNotUp() {
+        testAvailabilityCondition(
+                org.hawkular.alerts.api.model.condition.AvailabilityCondition.Operator.NOT_UP,
+                Match.ANY);
     }
 
     public void testThresholdCondition(Operator operator, Match match) {
@@ -137,7 +166,7 @@ public class ConditionsTest extends ValidateConditions {
 
         _logger.debug("Selected Values[Min:{}, Max:{}]", valueMin, valueMax);
 
-        Trigger trigger = new Trigger(triggerId, "Trigger Name Threshold" + triggerId);
+        Trigger trigger = new Trigger(triggerId, "Trigger Name Threshold-" + triggerId);
         trigger.setFiringMatch(match);
 
         //Create Trigger
@@ -159,7 +188,8 @@ public class ConditionsTest extends ValidateConditions {
         updateTrigger(trigger.getId(), trigger);
 
         //Prepare data
-        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, valueMin, valueMax, 10, 1000);
+        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, valueMin, valueMax,
+                getRandomInteger(dataCountMin, dataCountMax), delayTime);
         List<NumericData> numericDataList = getNumericData(randomDouble);
 
         MixedData mixedData = new MixedData();
@@ -186,7 +216,7 @@ public class ConditionsTest extends ValidateConditions {
 
         _logger.debug("Selected Values[RangeMin:{}, RangeMax:{}]", rangeMin, rangeMax);
 
-        Trigger trigger = new Trigger(triggerId, "Trigger Name ThresholdRange" + triggerId);
+        Trigger trigger = new Trigger(triggerId, "Trigger Name ThresholdRange-" + triggerId);
         trigger.setFiringMatch(match);
 
         //Create Trigger
@@ -213,11 +243,53 @@ public class ConditionsTest extends ValidateConditions {
         updateTrigger(trigger.getId(), trigger);
 
         //Prepare data
-        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, doubleMinValue, doubleMaxValue, 10, 1000);
+        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, doubleMinValue, doubleMaxValue,
+                getRandomInteger(dataCountMin, dataCountMax), delayTime);
         List<NumericData> numericDataList = getNumericData(randomDouble);
 
         MixedData mixedData = new MixedData();
         mixedData.setNumericData(numericDataList);
+
+        validateAndDelete(trigger, conditions, mixedData, Match.ANY);
+
+    }
+
+    public void testAvailabilityCondition(
+            org.hawkular.alerts.api.model.condition.AvailabilityCondition.Operator operator,
+            Match match) {
+
+        _logger.debug("Testing condition:[Availability:{}]", operator.toString());
+
+        String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
+        String triggerId = "trigger-id-" + getRandomId();
+
+        Trigger trigger = new Trigger(triggerId, "Trigger Name Availability-" + triggerId);
+        trigger.setFiringMatch(match);
+
+        //Create Trigger
+        createTrigger(trigger);
+
+        //Setup new conditions
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(
+                new AvailabilityCondition(triggerId, Mode.FIRING, dataId, operator));
+
+        //Add Conditions in to trigger
+        addTriggerCondition(trigger, conditions, Mode.FIRING);
+
+        //Enable Trigger
+        trigger.setEnabled(true);
+
+        //Update Trigger
+        updateTrigger(trigger.getId(), trigger);
+
+        //Prepare data
+        RandomAvailability randomAvailability = new RandomAvailability(TENANT.getId(), dataId, getRandomInteger(
+                dataCountMin, dataCountMax), delayTime);
+        List<Availability> dataList = getAvailabilityData(randomAvailability);
+
+        MixedData mixedData = new MixedData();
+        mixedData.setAvailability(dataList);
 
         validateAndDelete(trigger, conditions, mixedData, Match.ANY);
 

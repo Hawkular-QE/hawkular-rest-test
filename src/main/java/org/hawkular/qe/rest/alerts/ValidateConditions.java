@@ -16,10 +16,13 @@
  */
 package org.hawkular.qe.rest.alerts;
 
+import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator;
+import org.hawkular.alerts.api.model.data.Availability;
+import org.hawkular.alerts.api.model.data.Availability.AvailabilityType;
 import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.qe.rest.alerts.model.ConditionsModel;
 
@@ -41,6 +44,7 @@ public class ValidateConditions extends AlertsTestBase {
                 case COMPARE:
                     break;
                 case AVAILABILITY:
+                    validateAvailabilityCondition((AvailabilityCondition) condition, conditionsModel);
                     break;
                 case STRING:
                     break;
@@ -127,6 +131,30 @@ public class ValidateConditions extends AlertsTestBase {
                 } else if (!condition.isInRange()) {
                     conditionsModel.increaseTriggeredConditionCount(condition);
                 }
+            }
+        }
+    }
+
+    public void validateAvailabilityCondition(AvailabilityCondition condition, ConditionsModel conditionsModel) {
+        for (Availability data : conditionsModel.getMixedData().getAvailability()) {
+            switch (condition.getOperator()) {
+                case UP:
+                    if (data.getValue() == AvailabilityType.UP) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                case DOWN:
+                    if (data.getValue() == AvailabilityType.DOWN) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                case NOT_UP:
+                    if (data.getValue() != AvailabilityType.UP) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
+import org.hawkular.alerts.api.model.data.Availability;
+import org.hawkular.alerts.api.model.data.Availability.AvailabilityType;
 import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.alerts.api.model.trigger.Mode;
@@ -29,6 +31,7 @@ import org.hawkular.client.ClientResponse;
 import org.hawkular.client.alert.model.AlertsParams;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
+import org.hawkular.qe.rest.model.RandomAvailability;
 import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -132,5 +135,27 @@ public class AlertsTestBase extends HawkularRestTestBase {
                     getRandomDouble(randomDouble.getMinLimit(), randomDouble.getMaxLimit())));
         }
         return numericDataList;
+    }
+
+    public List<Availability> getAvailabilityData(RandomAvailability randomAvailability) {
+        List<Availability> dataList = new ArrayList<Availability>();
+        long firstDataTimestamp = System.currentTimeMillis()
+                - (randomAvailability.getCount() * randomAvailability.getDelay());
+        for (long count = 0; count < randomAvailability.getCount(); count++) {
+            dataList.add(new Availability(randomAvailability.getId(),
+                    firstDataTimestamp + (count * randomAvailability.getDelay()),
+                    getRandomAvailabilityType()));
+        }
+        return dataList;
+    }
+
+    public AvailabilityType getRandomAvailabilityType() {
+        int randomInt = getRandomInteger(0, 2);
+        if (randomInt == 0) {
+            return AvailabilityType.DOWN;
+        } else if (randomInt == 1) {
+            return AvailabilityType.UP;
+        }
+        return AvailabilityType.UNAVAILABLE;
     }
 }

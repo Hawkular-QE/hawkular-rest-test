@@ -76,6 +76,10 @@ public class HawkularRestTestBase {
         return min + (max - min) * random.nextDouble();
     }
 
+    public static int getRandomInteger(int min, int max) {
+        return Math.round(min + (max - min) * random.nextFloat());
+    }
+
     public static String getRandomId() {
         return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
     }
