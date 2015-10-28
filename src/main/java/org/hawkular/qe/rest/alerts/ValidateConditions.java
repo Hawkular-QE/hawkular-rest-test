@@ -19,6 +19,7 @@ package org.hawkular.qe.rest.alerts;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
+import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator;
 import org.hawkular.alerts.api.model.data.NumericData;
 import org.hawkular.qe.rest.alerts.model.ConditionsModel;
 
@@ -82,42 +83,52 @@ public class ValidateConditions extends AlertsTestBase {
 
     public void validateThresholdRangeCondition(ThresholdRangeCondition condition, ConditionsModel conditionsModel) {
         for (NumericData data : conditionsModel.getMixedData().getNumericData()) {
-            switch (condition.getOperatorLow()) {
-                case INCLUSIVE:
-                    if (condition.isInRange() && data.getValue() >= condition.getThresholdLow()) {
-                        conditionsModel.increaseTriggeredConditionCount(condition);
-                    } else if (!condition.isInRange() && data.getValue() <= condition.getThresholdLow()) {
-                        conditionsModel.increaseTriggeredConditionCount(condition);
-                    }
-                    break;
-                case EXCLUSIVE:
-                    if (condition.isInRange() && data.getValue() > condition.getThresholdLow()) {
-                        conditionsModel.increaseTriggeredConditionCount(condition);
-                    } else if (!condition.isInRange() && data.getValue() < condition.getThresholdLow()) {
+            if (condition.getOperatorLow() == Operator.INCLUSIVE
+                    && condition.getOperatorHigh() == Operator.INCLUSIVE) {
+                if (data.getValue() >= condition.getThresholdLow()
+                        && data.getValue() <= condition.getThresholdHigh()) {
+                    if (condition.isInRange()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
-                    break;
-                default:
-                    break;
-            }
-            switch (condition.getOperatorHigh()) {
-                case INCLUSIVE:
-                    if (condition.isInRange() && data.getValue() <= condition.getThresholdLow()) {
-                        conditionsModel.increaseTriggeredConditionCount(condition);
-                    } else if (!condition.isInRange() && data.getValue() >= condition.getThresholdLow()) {
-                        conditionsModel.increaseTriggeredConditionCount(condition);
-                    }
-                    break;
-                case EXCLUSIVE:
-                    if (condition.isInRange() && data.getValue() < condition.getThresholdLow()) {
-                        conditionsModel.increaseTriggeredConditionCount(condition);
-                    } else if (!condition.isInRange() && data.getValue() > condition.getThresholdLow()) {
+
+                } else if (!condition.isInRange()) {
+                    conditionsModel.increaseTriggeredConditionCount(condition);
+                }
+            } else if (condition.getOperatorLow() == Operator.INCLUSIVE
+                    && condition.getOperatorHigh() == Operator.EXCLUSIVE) {
+                if (data.getValue() >= condition.getThresholdLow()
+                        && data.getValue() < condition.getThresholdHigh()) {
+                    if (condition.isInRange()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
-                    break;
-                default:
-                    break;
+
+                } else if (!condition.isInRange()) {
+                    conditionsModel.increaseTriggeredConditionCount(condition);
+                }
+            } else if (condition.getOperatorLow() == Operator.EXCLUSIVE
+                    && condition.getOperatorHigh() == Operator.EXCLUSIVE) {
+                if (data.getValue() > condition.getThresholdLow()
+                        && data.getValue() < condition.getThresholdHigh()) {
+                    if (condition.isInRange()) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+
+                } else if (!condition.isInRange()) {
+                    conditionsModel.increaseTriggeredConditionCount(condition);
+                }
+            } else if (condition.getOperatorLow() == Operator.EXCLUSIVE
+                    && condition.getOperatorHigh() == Operator.INCLUSIVE) {
+                if (data.getValue() > condition.getThresholdLow()
+                        && data.getValue() <= condition.getThresholdHigh()) {
+                    if (condition.isInRange()) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+
+                } else if (!condition.isInRange()) {
+                    conditionsModel.increaseTriggeredConditionCount(condition);
+                }
             }
         }
     }
+
 }
