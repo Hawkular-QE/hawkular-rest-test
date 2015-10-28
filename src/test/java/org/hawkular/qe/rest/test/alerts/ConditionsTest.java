@@ -48,7 +48,7 @@ public class ConditionsTest extends ValidateConditions {
     public static final double doubleMinValue = 0.0;
     public static final double doubleMaxValue = 1000000.0;
 
-    public static final int dataCountMin = 5;
+    public static final int dataCountMin = 2;
     public static final int dataCountMax = 30;
 
     @Test(priority = 0)
@@ -159,7 +159,7 @@ public class ConditionsTest extends ValidateConditions {
     public void testThresholdCondition(Operator operator, Match match) {
         _logger.debug("Testing condition:{}", operator.toString());
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-" + getRandomId();
+        String triggerId = "trigger-id-" + operator.toString() + "-" + getRandomId();
 
         double valueMin = getRandomDouble(doubleMinValue, 1000.0);
         double valueMax = getRandomDouble(valueMin, doubleMaxValue);
@@ -209,7 +209,8 @@ public class ConditionsTest extends ValidateConditions {
                 operatorLow.toString(), operatorHigh, inRange);
 
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-" + getRandomId();
+        String triggerId = "trigger-id-" + operatorLow.toString() + "-" + operatorLow.toString() + "-" + inRange + "-"
+                + getRandomId();
 
         double rangeMin = getRandomDouble(doubleMinValue, 10000.0);
         double rangeMax = getRandomDouble(rangeMin, doubleMaxValue);
@@ -261,7 +262,7 @@ public class ConditionsTest extends ValidateConditions {
         _logger.debug("Testing condition:[Availability:{}]", operator.toString());
 
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-" + getRandomId();
+        String triggerId = "trigger-id-" + operator.toString() + "-" + getRandomId();
 
         Trigger trigger = new Trigger(triggerId, "Trigger Name Availability-" + triggerId);
         trigger.setFiringMatch(match);
@@ -326,7 +327,8 @@ public class ConditionsTest extends ValidateConditions {
             alerts = new ArrayList<Alert>();
         }
 
-        Assert.assertEquals(alerts.size(), conditionsModel.getTotalTriggeredCount(), "Triggers count validation");
+        Assert.assertEquals(alerts.size(), conditionsModel.getTotalTriggeredCount(),
+                "Trigger[" + trigger.getId() + "] count validation");
 
         if (alerts.size() > 0) {
             //Acknowledge alert
