@@ -209,19 +209,16 @@ public class ConditionsTest extends ValidateConditions {
                 operatorLow.toString(), operatorHigh, inRange);
 
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-threshold-range-" + operatorLow.toString() + "-" + operatorLow.toString() + "-"
-                + inRange + "-"
-                + getRandomId();
+        String triggerId = "trigger-id-threshold-range-L_" + operatorLow.toString() + "-H_" + operatorHigh.toString()
+                + "-R_" + inRange + "-" + getRandomId();
 
         double rangeMin = getRandomDouble(doubleMinValue, 10000.0);
         double rangeMax = getRandomDouble(rangeMin, doubleMaxValue);
 
         _logger.debug("Selected Values[RangeMin:{}, RangeMax:{}]", rangeMin, rangeMax);
 
-        Trigger trigger = new Trigger(triggerId, "ThresholdRange-" + operatorLow.toString() + "-"
-                + operatorLow.toString() + "-"
-                + inRange + "-"
-                + getRandomId());
+        Trigger trigger = new Trigger(triggerId, "ThresholdRange-L_" + operatorLow.toString() + "-H_"
+                + operatorHigh.toString() + "-R_" + inRange + "-" + getRandomId());
         trigger.setFiringMatch(match);
 
         //Create Trigger
