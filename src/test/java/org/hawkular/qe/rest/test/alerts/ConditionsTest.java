@@ -159,14 +159,14 @@ public class ConditionsTest extends ValidateConditions {
     public void testThresholdCondition(Operator operator, Match match) {
         _logger.debug("Testing condition:{}", operator.toString());
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-" + operator.toString() + "-" + getRandomId();
+        String triggerId = "trigger-id-threshold-" + operator.toString() + "-" + getRandomId();
 
         double valueMin = getRandomDouble(doubleMinValue, 1000.0);
         double valueMax = getRandomDouble(valueMin, doubleMaxValue);
 
         _logger.debug("Selected Values[Min:{}, Max:{}]", valueMin, valueMax);
 
-        Trigger trigger = new Trigger(triggerId, "Trigger Name Threshold-" + triggerId);
+        Trigger trigger = new Trigger(triggerId, "Threshold-" + operator.toString() + "-" + getRandomId());
         trigger.setFiringMatch(match);
 
         //Create Trigger
@@ -209,7 +209,8 @@ public class ConditionsTest extends ValidateConditions {
                 operatorLow.toString(), operatorHigh, inRange);
 
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-" + operatorLow.toString() + "-" + operatorLow.toString() + "-" + inRange + "-"
+        String triggerId = "trigger-id-threshold-range-" + operatorLow.toString() + "-" + operatorLow.toString() + "-"
+                + inRange + "-"
                 + getRandomId();
 
         double rangeMin = getRandomDouble(doubleMinValue, 10000.0);
@@ -217,7 +218,10 @@ public class ConditionsTest extends ValidateConditions {
 
         _logger.debug("Selected Values[RangeMin:{}, RangeMax:{}]", rangeMin, rangeMax);
 
-        Trigger trigger = new Trigger(triggerId, "Trigger Name ThresholdRange-" + triggerId);
+        Trigger trigger = new Trigger(triggerId, "ThresholdRange-" + operatorLow.toString() + "-"
+                + operatorLow.toString() + "-"
+                + inRange + "-"
+                + getRandomId());
         trigger.setFiringMatch(match);
 
         //Create Trigger
@@ -262,9 +266,9 @@ public class ConditionsTest extends ValidateConditions {
         _logger.debug("Testing condition:[Availability:{}]", operator.toString());
 
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-" + operator.toString() + "-" + getRandomId();
+        String triggerId = "trigger-id-availability-" + operator.toString() + "-" + getRandomId();
 
-        Trigger trigger = new Trigger(triggerId, "Trigger Name Availability-" + triggerId);
+        Trigger trigger = new Trigger(triggerId, "Availability-" + operator.toString() + "-" + getRandomId());
         trigger.setFiringMatch(match);
 
         //Create Trigger
