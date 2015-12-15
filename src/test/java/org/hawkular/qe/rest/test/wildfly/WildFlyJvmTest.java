@@ -74,7 +74,7 @@ public class WildFlyJvmTest extends WildFlyServerBase {
     @Test(dependsOnMethods = { "createEnvironment" })
     public void registerFeed() {
         //Register Feed
-        FEED = new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT.getId()).feed(FEED_ID).get());
+        FEED = new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed(FEED_ID).get());
         if (getHawkularClient().inventory().getFeed(FEED).getEntity() == null) {
             ClientResponse<String> registerResponse = getHawkularClient().inventory().registerFeed(FEED);
             _logger.debug("Register Feed Response:[{}]", registerResponse.toString());
@@ -173,7 +173,7 @@ public class WildFlyJvmTest extends WildFlyServerBase {
         //Validate availability data
         Assert.assertTrue(AvailabilityType.fromString(getHawkularClient().metrics()
                 .getAvailabilityData(TENANT.getId(),
-                        METRICS.APP_SERVER.value(RESOURCE_ID)).get(0).getValue()) == AvailabilityType.UP);
+                        METRICS.APP_SERVER.value(RESOURCE_ID)).get(0).getValue().getText()) == AvailabilityType.UP);
 
         //long endTimestamp = startTimestamp + (DATA_DELAY * DATA_SIZE);
 

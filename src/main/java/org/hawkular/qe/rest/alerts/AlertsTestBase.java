@@ -19,12 +19,10 @@ package org.hawkular.qe.rest.alerts;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
-import org.hawkular.alerts.api.model.data.Availability;
-import org.hawkular.alerts.api.model.data.Availability.AvailabilityType;
-import org.hawkular.alerts.api.model.data.MixedData;
-import org.hawkular.alerts.api.model.data.NumericData;
+import org.hawkular.alerts.api.model.data.AvailabilityType;
+import org.hawkular.alerts.api.model.data.Data;
+import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.ClientResponse;
@@ -85,9 +83,9 @@ public class AlertsTestBase extends HawkularRestTestBase {
         Assert.assertTrue(deleteResult.isSuccess());
     }
 
-    public void sendData(MixedData mixedData) {
+    public void sendData(List<Data> datums) {
         //Send Mixed data
-        ClientResponse<String> sendDataResult = getHawkularClient().alerts().sendData(mixedData);
+        ClientResponse<String> sendDataResult = getHawkularClient().alerts().sendData(datums);
         _logger.debug("Send Alert Mixed data Status: " + sendDataResult);
         Assert.assertTrue(sendDataResult.isSuccess());
     }
@@ -126,23 +124,23 @@ public class AlertsTestBase extends HawkularRestTestBase {
         return alertIds.toString();
     }
 
-    public List<NumericData> getNumericData(RandomDouble randomDouble) {
-        List<NumericData> numericDataList = new ArrayList<NumericData>();
+    public List<Data> getNumericData(RandomDouble randomDouble) {
+        List<Data> numericDataList = new ArrayList<Data>();
         long firstDataTimestamp = System.currentTimeMillis() - (randomDouble.getCount() * randomDouble.getDelay());
         for (long count = 0; count < randomDouble.getCount(); count++) {
-            numericDataList.add(new NumericData(randomDouble.getId(), firstDataTimestamp
+            numericDataList.add(Data.forNumeric(randomDouble.getId(), firstDataTimestamp
                     + (count * randomDouble.getDelay()),
                     getRandomDouble(randomDouble.getMinLimit(), randomDouble.getMaxLimit())));
         }
         return numericDataList;
     }
 
-    public List<Availability> getAvailabilityData(RandomAvailability randomAvailability) {
-        List<Availability> dataList = new ArrayList<Availability>();
+    public List<Data> getAvailabilityData(RandomAvailability randomAvailability) {
+        List<Data> dataList = new ArrayList<Data>();
         long firstDataTimestamp = System.currentTimeMillis()
                 - (randomAvailability.getCount() * randomAvailability.getDelay());
         for (long count = 0; count < randomAvailability.getCount(); count++) {
-            dataList.add(new Availability(randomAvailability.getId(),
+            dataList.add(Data.forAvailability(randomAvailability.getId(),
                     firstDataTimestamp + (count * randomAvailability.getDelay()),
                     getRandomAvailabilityType()));
         }

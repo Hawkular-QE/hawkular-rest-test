@@ -21,9 +21,8 @@ import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator;
-import org.hawkular.alerts.api.model.data.Availability;
-import org.hawkular.alerts.api.model.data.Availability.AvailabilityType;
-import org.hawkular.alerts.api.model.data.NumericData;
+import org.hawkular.alerts.api.model.data.AvailabilityType;
+import org.hawkular.alerts.api.model.data.Data;
 import org.hawkular.qe.rest.alerts.model.ConditionsModel;
 
 /**
@@ -57,25 +56,25 @@ public class ValidateConditions extends AlertsTestBase {
     }
 
     public void validateThresholdCondition(ThresholdCondition condition, ConditionsModel conditionsModel) {
-        for (NumericData data : conditionsModel.getMixedData().getNumericData()) {
+        for (Data data : conditionsModel.getDatums()) {
             switch (condition.getOperator()) {
                 case GT:
-                    if (data.getValue() > condition.getThreshold()) {
+                    if (getDouble(data.getValue()) > condition.getThreshold()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case GTE:
-                    if (data.getValue() >= condition.getThreshold()) {
+                    if (getDouble(data.getValue()) >= condition.getThreshold()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case LT:
-                    if (data.getValue() < condition.getThreshold()) {
+                    if (getDouble(data.getValue()) < condition.getThreshold()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case LTE:
-                    if (data.getValue() <= condition.getThreshold()) {
+                    if (getDouble(data.getValue()) <= condition.getThreshold()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
@@ -86,11 +85,11 @@ public class ValidateConditions extends AlertsTestBase {
     }
 
     public void validateThresholdRangeCondition(ThresholdRangeCondition condition, ConditionsModel conditionsModel) {
-        for (NumericData data : conditionsModel.getMixedData().getNumericData()) {
+        for (Data data : conditionsModel.getDatums()) {
             if (condition.getOperatorLow() == Operator.INCLUSIVE
                     && condition.getOperatorHigh() == Operator.INCLUSIVE) {
-                if (data.getValue() >= condition.getThresholdLow()
-                        && data.getValue() <= condition.getThresholdHigh()) {
+                if (getDouble(data.getValue()) >= condition.getThresholdLow()
+                        && getDouble(data.getValue()) <= condition.getThresholdHigh()) {
                     if (condition.isInRange()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
@@ -100,8 +99,8 @@ public class ValidateConditions extends AlertsTestBase {
                 }
             } else if (condition.getOperatorLow() == Operator.INCLUSIVE
                     && condition.getOperatorHigh() == Operator.EXCLUSIVE) {
-                if (data.getValue() >= condition.getThresholdLow()
-                        && data.getValue() < condition.getThresholdHigh()) {
+                if (getDouble(data.getValue()) >= condition.getThresholdLow()
+                        && getDouble(data.getValue()) < condition.getThresholdHigh()) {
                     if (condition.isInRange()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
@@ -111,8 +110,8 @@ public class ValidateConditions extends AlertsTestBase {
                 }
             } else if (condition.getOperatorLow() == Operator.EXCLUSIVE
                     && condition.getOperatorHigh() == Operator.EXCLUSIVE) {
-                if (data.getValue() > condition.getThresholdLow()
-                        && data.getValue() < condition.getThresholdHigh()) {
+                if (getDouble(data.getValue()) > condition.getThresholdLow()
+                        && getDouble(data.getValue()) < condition.getThresholdHigh()) {
                     if (condition.isInRange()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
@@ -122,8 +121,8 @@ public class ValidateConditions extends AlertsTestBase {
                 }
             } else if (condition.getOperatorLow() == Operator.EXCLUSIVE
                     && condition.getOperatorHigh() == Operator.INCLUSIVE) {
-                if (data.getValue() > condition.getThresholdLow()
-                        && data.getValue() <= condition.getThresholdHigh()) {
+                if (getDouble(data.getValue()) > condition.getThresholdLow()
+                        && getDouble(data.getValue()) <= condition.getThresholdHigh()) {
                     if (condition.isInRange()) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
@@ -136,20 +135,20 @@ public class ValidateConditions extends AlertsTestBase {
     }
 
     public void validateAvailabilityCondition(AvailabilityCondition condition, ConditionsModel conditionsModel) {
-        for (Availability data : conditionsModel.getMixedData().getAvailability()) {
+        for (Data data : conditionsModel.getDatums()) {
             switch (condition.getOperator()) {
                 case UP:
-                    if (data.getValue() == AvailabilityType.UP) {
+                    if (getAvailability(data.getValue()) == AvailabilityType.UP) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case DOWN:
-                    if (data.getValue() == AvailabilityType.DOWN) {
+                    if (getAvailability(data.getValue()) == AvailabilityType.DOWN) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
                 case NOT_UP:
-                    if (data.getValue() != AvailabilityType.UP) {
+                    if (getAvailability(data.getValue()) != AvailabilityType.UP) {
                         conditionsModel.increaseTriggeredConditionCount(condition);
                     }
                     break;
@@ -157,6 +156,14 @@ public class ValidateConditions extends AlertsTestBase {
                     break;
             }
         }
+    }
+
+    public Double getDouble(String value) {
+        return Double.valueOf(value);
+    }
+
+    public AvailabilityType getAvailability(String value) {
+        return AvailabilityType.valueOf(value);
     }
 
 }

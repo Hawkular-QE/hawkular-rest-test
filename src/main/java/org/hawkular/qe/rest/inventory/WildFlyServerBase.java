@@ -147,7 +147,7 @@ public class WildFlyServerBase extends InventoryTestBase {
         HashMap<String, Object> properties = new HashMap<String, Object>();
         //properties.put("name", resourceType.getId());
         return new Resource(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
-                .feed(feed.getId()).resource(getQualifiedResourceId(resourceId)).get(), resourceType, properties);
+               .resource(getQualifiedResourceId(resourceId)).get(), resourceType, properties);
     }
 
     public static MetricType getMetricType(Tenant tenant, METRIC_TYPES type) {
@@ -165,7 +165,7 @@ public class WildFlyServerBase extends InventoryTestBase {
         HashMap<String, Object> properties = new HashMap<String, Object>();
         //properties.put("name", METRIC_TYPES.values()[metric.ordinal()]);
         return new Metric(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
-                .feed(feed.getId()).metric(metric.value(resourceId)).get(), getMetricType(tenant,
+                .metric(metric.value(resourceId)).get(), getMetricType(tenant,
                 METRIC_TYPES.values()[metric.ordinal()]), properties);
     }
 

@@ -76,7 +76,8 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the Environment:[{}] under the Tenant:[{}], Found?:[{}]",
-                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getPath().ids().getTenantId(),
+                    found);
             Assert.assertTrue(found);
         }
     }
@@ -85,14 +86,14 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
     }
 
     public void assertMetricTypes(MetricType actual, MetricType expected) {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getUnit(), expected.getUnit());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
     }
@@ -111,7 +112,8 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the MetricType:[{}] under the Tenant:[{}], Found?:[{}]",
-                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getPath().ids().getTenantId(),
+                    found);
             Assert.assertTrue(found);
         }
     }
@@ -120,9 +122,9 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
-        Assert.assertEquals(actual.getEnvironmentId(), expected.getEnvironmentId());
+        Assert.assertEquals(actual.getPath().ids().getEnvironmentId(), expected.getPath().ids().getEnvironmentId());
         assertMetricTypes(actual.getType(), expected.getType());
     }
 
@@ -140,7 +142,8 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the Metric:[{}] under the Tenant:[{}], Found?:[{}]",
-                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getPath().ids().getTenantId(),
+                    found);
             Assert.assertTrue(found);
         }
     }
@@ -149,7 +152,7 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
     }
 
@@ -167,7 +170,8 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the ResourceType:[{}] under the Tenant:[{}], Found?:[{}]",
-                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getPath().ids().getTenantId(),
+                    found);
             Assert.assertTrue(found);
         }
     }
@@ -176,9 +180,9 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
-        Assert.assertEquals(actual.getEnvironmentId(), expected.getEnvironmentId());
+        Assert.assertEquals(actual.getPath().ids().getEnvironmentId(), expected.getPath().ids().getEnvironmentId());
         assertResourceTypes(actual.getType(), expected.getType());
     }
 
@@ -196,7 +200,8 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the Resource:[{}] under the Tenant:[{}], Found?:[{}]",
-                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getPath().ids().getTenantId(),
+                    found);
             Assert.assertTrue(found);
         }
     }
@@ -205,9 +210,9 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertNotNull(actual);
         Assert.assertNotNull(expected);
         Assert.assertEquals(actual.getId(), expected.getId());
-        Assert.assertEquals(actual.getTenantId(), expected.getTenantId());
+        Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
-        Assert.assertEquals(actual.getEnvironmentId(), expected.getEnvironmentId());
+        Assert.assertEquals(actual.getPath().ids().getEnvironmentId(), expected.getPath().ids().getEnvironmentId());
     }
 
     public void assertFeedsList(List<Feed> actual, List<Feed> expected) {
@@ -224,7 +229,8 @@ public class InventoryTestBase extends HawkularRestTestBase {
                 }
             }
             _logger.debug("Processed for the Feed:[{}] under the Tenant:[{}], Found?:[{}]",
-                    expected.get(expectedCount).getId(), expected.get(expectedCount).getTenantId(), found);
+                    expected.get(expectedCount).getId(), expected.get(expectedCount).getPath().ids().getTenantId(),
+                    found);
             Assert.assertTrue(found);
         }
     }

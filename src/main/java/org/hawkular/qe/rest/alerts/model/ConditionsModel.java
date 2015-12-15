@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
-import org.hawkular.alerts.api.model.data.MixedData;
+import org.hawkular.alerts.api.model.data.Data;
+import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.alerts.api.model.trigger.Match;
 
 /**
@@ -32,7 +32,7 @@ public class ConditionsModel {
 
     private String triggerId;
     private List<Condition> conditions;
-    private MixedData mixedData;
+    private List<Data> datums;
     private Match match;
     private Map<String, TriggeredCondition> triggeredConditions = new HashMap<String, TriggeredCondition>();
     private List<Alert> alerts;
@@ -41,9 +41,9 @@ public class ConditionsModel {
 
     }
 
-    public ConditionsModel(List<Condition> conditions, MixedData mixedData, Match match) {
+    public ConditionsModel(List<Condition> conditions, List<Data> datums, Match match) {
         this.conditions = conditions;
-        this.mixedData = mixedData;
+        this.datums = datums;
         this.match = match;
     }
 
@@ -53,14 +53,6 @@ public class ConditionsModel {
 
     public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
-    }
-
-    public MixedData getMixedData() {
-        return mixedData;
-    }
-
-    public void setMixedData(MixedData mixedData) {
-        this.mixedData = mixedData;
     }
 
     public Match getMatch() {
@@ -115,5 +107,13 @@ public class ConditionsModel {
             count += triggeredConditions.get(conditionKey).getTriggeredCount();
         }
         return count;
+    }
+
+    public List<Data> getDatums() {
+        return datums;
+    }
+
+    public void setDatums(List<Data> datums) {
+        this.datums = datums;
     }
 }

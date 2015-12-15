@@ -19,15 +19,13 @@ package org.hawkular.qe.rest.test.alerts;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition.Operator;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
-import org.hawkular.alerts.api.model.data.Availability;
-import org.hawkular.alerts.api.model.data.MixedData;
-import org.hawkular.alerts.api.model.data.NumericData;
+import org.hawkular.alerts.api.model.data.Data;
+import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.alerts.api.model.trigger.Match;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
@@ -190,12 +188,9 @@ public class ConditionsTest extends ValidateConditions {
         //Prepare data
         RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, valueMin, valueMax,
                 getRandomInteger(dataCountMin, dataCountMax), delayTime);
-        List<NumericData> numericDataList = getNumericData(randomDouble);
+        List<Data> numericDataList = getNumericData(randomDouble);
 
-        MixedData mixedData = new MixedData();
-        mixedData.setNumericData(numericDataList);
-
-        validateAndDelete(trigger, conditions, mixedData, Match.ANY);
+        validateAndDelete(trigger, conditions, numericDataList, Match.ANY);
 
     }
 
@@ -247,12 +242,9 @@ public class ConditionsTest extends ValidateConditions {
         //Prepare data
         RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, doubleMinValue, doubleMaxValue,
                 getRandomInteger(dataCountMin, dataCountMax), delayTime);
-        List<NumericData> numericDataList = getNumericData(randomDouble);
+        List<Data> numericDataList = getNumericData(randomDouble);
 
-        MixedData mixedData = new MixedData();
-        mixedData.setNumericData(numericDataList);
-
-        validateAndDelete(trigger, conditions, mixedData, Match.ANY);
+        validateAndDelete(trigger, conditions, numericDataList, Match.ANY);
 
     }
 
@@ -288,24 +280,21 @@ public class ConditionsTest extends ValidateConditions {
         //Prepare data
         RandomAvailability randomAvailability = new RandomAvailability(TENANT.getId(), dataId, getRandomInteger(
                 dataCountMin, dataCountMax), delayTime);
-        List<Availability> dataList = getAvailabilityData(randomAvailability);
+        List<Data> dataList = getAvailabilityData(randomAvailability);
 
-        MixedData mixedData = new MixedData();
-        mixedData.setAvailability(dataList);
-
-        validateAndDelete(trigger, conditions, mixedData, Match.ANY);
+        validateAndDelete(trigger, conditions, dataList, Match.ANY);
 
     }
 
-    private void validateAndDelete(Trigger trigger, List<Condition> conditions, MixedData mixedData, Match match) {
+    private void validateAndDelete(Trigger trigger, List<Condition> conditions, List<Data> datums, Match match) {
         //Validate locally
-        ConditionsModel conditionsModel = new ConditionsModel(conditions, mixedData, match);
+        ConditionsModel conditionsModel = new ConditionsModel(conditions, datums, match);
         validateConditions(conditionsModel);
 
         _logger.debug("Local validations Result:[{}]", conditionsModel.getTriggeredConditionsMap());
 
         //Add data
-        sendData(mixedData);
+        sendData(datums);
 
         //Update Alerts Params
         AlertsParams alertsParams = new AlertsParams();

@@ -38,7 +38,8 @@ public class ResourceTypeTest extends InventoryTestBase {
 
     @Test(dataProvider = "resourceTypeDataProvider", priority = 1)
     public void creatTest(ResourceType resourceType) {
-        _logger.debug("Creating ResourceType[{}] under tenant[{}]", resourceType.getId(), resourceType.getTenantId());
+        _logger.debug("Creating ResourceType[{}] under tenant[{}]", resourceType.getId(), resourceType.getPath().ids()
+                .getTenantId());
         Assert.assertTrue(getHawkularClient().inventory().createResourceType(resourceType).isSuccess());
     }
 
@@ -53,14 +54,16 @@ public class ResourceTypeTest extends InventoryTestBase {
 
     @Test(dataProvider = "resourceTypeDataProvider", priority = 3)
     public void getTest(ResourceType resourceType) {
-        _logger.debug("Fetching resourceType[{}] under tenant[{}]", resourceType.getId(), resourceType.getTenantId());
+        _logger.debug("Fetching resourceType[{}] under tenant[{}]", resourceType.getId(), resourceType.getPath().ids()
+                .getTenantId());
         ResourceType resourceTypeRx = getHawkularClient().inventory().getResourceType(resourceType).getEntity();
         assertResourceTypes(resourceTypeRx, resourceType);
     }
 
     @Test(dataProvider = "resourceTypeDataProvider", priority = 4)
     public void deleteTest(ResourceType resourceType) {
-        _logger.debug("Deleting resourceType[{}] under tenant[{}]", resourceType.getId(), resourceType.getTenantId());
+        _logger.debug("Deleting resourceType[{}] under tenant[{}]", resourceType.getId(), resourceType.getPath().ids()
+                .getTenantId());
         Assert.assertTrue(getHawkularClient().inventory().deleteResourceType(resourceType).isSuccess());
     }
 
