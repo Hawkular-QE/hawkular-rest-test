@@ -106,29 +106,29 @@ public class ConditionsUnitTest extends AlertsTestBase {
         //Create New trigger to add condition
         Trigger triggerNew = new Trigger(triggerId, "automation-unit-test");
         ClientResponse<Trigger> triggerCreateResult = getHawkularClient().alerts().createTrigger(triggerNew);
-        _logger.debug("Trigger Creation Status:" + triggerCreateResult);
+        _logger.debug("Trigger Creation Status:{}", triggerCreateResult);
         Assert.assertTrue(triggerCreateResult.isSuccess());
 
         //Create Conditions
         ClientResponse<List<Condition>> conditionsResult = getHawkularClient().alerts().setConditions(triggerId,
                 mode.name(), conditions);
-        _logger.debug("Conditions Creation Status: " + conditionsResult);
+        _logger.debug("Conditions Creation Status:{}", conditionsResult);
         Assert.assertTrue(conditionsResult.isSuccess());
 
         //Get Conditions
         conditionsResult = getHawkularClient().alerts().getTriggerConditions(triggerId);
-        _logger.debug("Conditions get status: " + conditionsResult);
+        _logger.debug("Conditions get status:{}", conditionsResult);
         Assert.assertTrue(conditionsResult.isSuccess());
 
         //Clear Conditions
         conditions.clear();
         conditionsResult = getHawkularClient().alerts().setConditions(triggerId, mode.name(), conditions);
-        _logger.debug("Clear Conditions Status: " + conditionsResult);
+        _logger.debug("Clear Conditions Status:{}", conditionsResult);
         Assert.assertTrue(conditionsResult.isSuccess());
 
         //Delete trigger
         ClientResponse<String> deleteResult = getHawkularClient().alerts().deleteTrigger(triggerId);
-        _logger.debug("Trigger[" + triggerId + "] Delete Status: " + deleteResult);
+        _logger.debug("Trigger[{}] Delete Status:{}", triggerId, deleteResult);
         Assert.assertTrue(deleteResult.isSuccess());
     }
 }
