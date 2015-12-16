@@ -305,7 +305,9 @@ public class ConditionsTest extends ValidateConditions {
         for (int count = 0; count < 20; count++) {
             alerts = getAlerts(alertsParams);
             if (alerts != null && !alerts.isEmpty()) {
-                break;
+                if(alerts.size() == conditionsModel.getTotalTriggeredCount()){
+                    break;
+                }
             }
             try {
                 Thread.sleep(500);
