@@ -16,16 +16,29 @@
  */
 package org.hawkular.qe.rest.base.metrics;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.TenantParam;
+import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.metrics.core.api.DataPoint;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
+import org.hawkular.qe.rest.model.RandomDouble;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public class MetricsTestBase extends HawkularRestTestBase {
+
+    public static Tenant TENANT;
+
+    @BeforeClass
+    public void loadBefore() {
+        TENANT = getHawkularClient().inventory().getTenant().getEntity();
+    }
 
     public void assertTenantsList(List<TenantParam> actual, List<TenantParam> expected) {
         Assert.assertNotNull(actual);
@@ -60,4 +73,19 @@ public class MetricsTestBase extends HawkularRestTestBase {
         return false;
     }
 
+    public List<GaugeDataPoint> getRandomGaugeDataPoints(RandomDouble randomDouble) {
+        List<GaugeDataPoint> gaugeDataPoints = new ArrayList<GaugeDataPoint>();
+        //long firstDataTimestamp = System.currentTimeMillis() - (randomDouble.getCount() * randomDouble.getDelay());
+        for (long count = 0; count < randomDouble.getCount(); count++) {
+            gaugeDataPoints.add(new GaugeDataPoint(new DataPoint<Double>(
+                    (System.currentTimeMillis() + (count * randomDouble.getDelay())), getRandomDouble(
+                            randomDouble.getMinLimit(),
+                            randomDouble.getMaxLimit()))));
+        }
+        return gaugeDataPoints;
+    }
+
+    public void addGaugeData(String metricId, List<GaugeDataPoint> dataPoints) {
+        getHawkularClient().metrics().addGaugeData(TENANT.getId(), metricId, dataPoints);
+    }
 }

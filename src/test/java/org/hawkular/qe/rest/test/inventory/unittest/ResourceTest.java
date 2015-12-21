@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hawkular.client.ClientResponse;
 import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Resource;
@@ -51,27 +52,32 @@ public class ResourceTest extends InventoryTestBase {
             RESOURCE_TYPE = new ResourceType(CanonicalPath.of().tenant(TENANT.getId()).resourceType(RESOURCE_TYPE_ID)
                     .get(), properties);
         }
-        Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
-        Assert.assertTrue(getHawkularClient()
-                .inventory()
-                .registerFeed(
-                        new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
-                                .get())).isSuccess());
-        Assert.assertTrue(getHawkularClient().inventory().createResourceType(RESOURCE_TYPE).isSuccess());
+        ClientResponse<String> clientResponse = getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID);
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
+
+        clientResponse = getHawkularClient().inventory().registerFeed(
+                new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed(FEED_ID).get()));
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
+
+        clientResponse = getHawkularClient().inventory().createResourceType(RESOURCE_TYPE);
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
     }
 
     @AfterClass
     public void clean() {
         Assert.assertTrue(getHawkularClient().inventory().deleteResourceType(RESOURCE_TYPE).isSuccess());
-        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(ENVIRONMENT_ID, FEED_ID).isSuccess());
+        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(FEED_ID).isSuccess());
         Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(ENVIRONMENT_ID).isSuccess());
     }
 
     @Test(dataProvider = "resourceDataProvider", priority = 1)
     public void addTest(Resource resource) {
         _logger.debug("Creating Resource[{}] under [tenant:{},environment:{}]", resource.getId(),
-                resource.getTenantId(),
-                resource.getEnvironmentId());
+                resource.getPath().ids().getTenantId(),
+                resource.getPath().ids().getEnvironmentId());
         Assert.assertTrue(getHawkularClient().inventory().addResource(resource).isSuccess());
     }
 
@@ -88,8 +94,8 @@ public class ResourceTest extends InventoryTestBase {
     @Test(dataProvider = "resourceDataProvider", priority = 3)
     public void getTest(Resource resource) {
         _logger.debug("Fetching resource[{}] under [tenant:{},environment:{}]", resource.getId(),
-                resource.getTenantId(),
-                resource.getEnvironmentId());
+                resource.getPath().ids().getTenantId(),
+                resource.getPath().ids().getEnvironmentId());
         Resource resourceRx = getHawkularClient().inventory().getResource(resource).getEntity();
         assertResources(resourceRx, resource);
     }
@@ -97,8 +103,8 @@ public class ResourceTest extends InventoryTestBase {
     @Test(dataProvider = "resourceDataProvider", priority = 4)
     public void deleteTest(Resource resource) {
         _logger.debug("Deleting resource[{}] under [tenant:{},environment:{}]", resource.getId(),
-                resource.getTenantId(),
-                resource.getEnvironmentId());
+                resource.getPath().ids().getTenantId(),
+                resource.getPath().ids().getEnvironmentId());
         Assert.assertTrue(getHawkularClient().inventory().deleteResource(resource).isSuccess());
     }
 
@@ -110,15 +116,15 @@ public class ResourceTest extends InventoryTestBase {
 
     public static List<? extends Object> getResources() {
         List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .resource("resource1").get(), RESOURCE_TYPE));
-        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .resource("_r").get(), RESOURCE_TYPE));
-        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .resource("3resource-_").get(), RESOURCE_TYPE));
-        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .resource("resource-2323").get(), RESOURCE_TYPE));
-        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        resources.add(new Resource(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .resource("resource-withlooooooooooooooooooooooooooooooooongstring").get(), RESOURCE_TYPE));
         return resources;
     }

@@ -38,7 +38,8 @@ public class EnvironmentTest extends InventoryTestBase {
 
     @Test(dataProvider = "environmentDataProvider", priority = 1)
     public void creatTest(Environment environment) {
-        _logger.debug("Creating environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
+        _logger.debug("Creating environment[{}] under tenant[{}]", environment.getId(), environment.getPath().ids()
+                .getTenantId());
         ClientResponse<String> clientResponse = getHawkularClient().inventory().createEnvironment(environment);
         _logger.debug("Environment Creation Status:[{}]", clientResponse);
         Assert.assertTrue(clientResponse.isSuccess(), clientResponse.toString());
@@ -57,17 +58,20 @@ public class EnvironmentTest extends InventoryTestBase {
 
     @Test(dataProvider = "environmentDataProvider", priority = 3)
     public void getTest(Environment environment) {
-        _logger.debug("Getting environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
+        _logger.debug("Getting environment[{}] under tenant[{}]", environment.getId(), environment.getPath().ids()
+                .getTenantId());
         ClientResponse<Environment> clientResponse = getHawkularClient().inventory().getEnvironment(environment);
         _logger.debug("Get Environment response:[{}]", clientResponse);
         Assert.assertNotNull(clientResponse.getEntity());
-        _logger.debug("Received environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
+        _logger.debug("Received environment[{}] under tenant[{}]", environment.getId(), environment.getPath().ids()
+                .getTenantId());
         assertEnvironments(clientResponse.getEntity(), environment);
     }
 
     @Test(dataProvider = "environmentDataProvider", priority = 4)
     public void deleteTest(Environment environment) {
-        _logger.debug("Deleting environment[{}] under tenant[{}]", environment.getId(), environment.getTenantId());
+        _logger.debug("Deleting environment[{}] under tenant[{}]", environment.getId(), environment.getPath().ids()
+                .getTenantId());
         ClientResponse<String> clientResponse = getHawkularClient().inventory().deleteEnvironment(environment);
         _logger.debug("Delete Environment Response:[{}]", clientResponse);
         Assert.assertTrue(clientResponse.isSuccess());

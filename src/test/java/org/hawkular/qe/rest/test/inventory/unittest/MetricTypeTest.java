@@ -38,7 +38,8 @@ public class MetricTypeTest extends InventoryTestBase {
 
     @Test(dataProvider = "metricTypeDataProvider", priority = 1)
     public void creatTest(MetricType metricType) {
-        _logger.debug("Creating MetricType[{}] under tenant[{}]", metricType.getId(), metricType.getTenantId());
+        _logger.debug("Creating MetricType[{}] under tenant[{}]", metricType.getId(), metricType.getPath().ids()
+                .getTenantId());
         Assert.assertTrue(getHawkularClient().inventory().createMetricType(metricType).isSuccess());
     }
 
@@ -53,14 +54,16 @@ public class MetricTypeTest extends InventoryTestBase {
 
     @Test(dataProvider = "metricTypeDataProvider", priority = 3)
     public void getTest(MetricType metricType) {
-        _logger.debug("Fetching metricType[{}] under tenant[{}]", metricType.getId(), metricType.getTenantId());
+        _logger.debug("Fetching metricType[{}] under tenant[{}]", metricType.getId(), metricType.getPath().ids()
+                .getTenantId());
         MetricType metricTypeRx = getHawkularClient().inventory().getMetricType(metricType).getEntity();
         assertMetricTypes(metricTypeRx, metricType);
     }
 
     @Test(dataProvider = "metricTypeDataProvider", priority = 4)
     public void deleteTest(MetricType metricType) {
-        _logger.debug("Deleting metricType[{}] under tenant[{}]", metricType.getId(), metricType.getTenantId());
+        _logger.debug("Deleting metricType[{}] under tenant[{}]", metricType.getId(), metricType.getPath().ids()
+                .getTenantId());
         Assert.assertTrue(getHawkularClient().inventory().deleteMetricType(metricType).isSuccess());
     }
 

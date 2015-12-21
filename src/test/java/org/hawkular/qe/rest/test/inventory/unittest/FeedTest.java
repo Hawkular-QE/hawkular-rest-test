@@ -19,6 +19,7 @@ package org.hawkular.qe.rest.test.inventory.unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.client.ClientResponse;
 import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.qe.rest.inventory.InventoryTestBase;
@@ -49,15 +50,18 @@ public class FeedTest extends InventoryTestBase {
 
     @Test(dataProvider = "feedDataProvider", priority = 1)
     public void registerTest(Feed feed) {
-        _logger.debug("Creating Feed[{}] under [tenant:{},environment:{}]", feed.getId(), feed.getTenantId(),
-                feed.getEnvironmentId());
-        Assert.assertTrue(getHawkularClient().inventory().registerFeed(feed).isSuccess());
+        _logger.debug("Creating Feed[{}] under [tenant:{},environment:{}]", feed.getId(), feed.getPath().ids()
+                .getTenantId(),
+                feed.getPath().ids().getEnvironmentId());
+        ClientResponse<String> clientResponse = getHawkularClient().inventory().registerFeed(feed);
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
     }
 
     @SuppressWarnings("unchecked")
     @Test(priority = 2)
     public void listTest() {
-        List<Feed> feeds = getHawkularClient().inventory().getAllFeeds(ENVIRONMENT_ID).getEntity();
+        List<Feed> feeds = getHawkularClient().inventory().getAllFeeds().getEntity();
         Assert.assertNotNull(feeds);
         _logger.debug("Number of Metrics:[{}], list:[{}]", feeds.size(), feeds);
         assertFeedsList(feeds, (List<Feed>) getMetrics());
@@ -65,16 +69,18 @@ public class FeedTest extends InventoryTestBase {
 
     @Test(dataProvider = "feedDataProvider", priority = 3)
     public void getTest(Feed feed) {
-        _logger.debug("Fetching feed[{}] under [tenant:{},environment:{}]", feed.getId(), feed.getTenantId(),
-                feed.getEnvironmentId());
+        _logger.debug("Fetching feed[{}] under [tenant:{},environment:{}]", feed.getId(), feed.getPath().ids()
+                .getTenantId(),
+                feed.getPath().ids().getEnvironmentId());
         Feed feedRx = getHawkularClient().inventory().getFeed(feed).getEntity();
         assertFeeds(feedRx, feed);
     }
 
     @Test(dataProvider = "feedDataProvider", priority = 4)
     public void deleteTest(Feed feed) {
-        _logger.debug("Deleting feed[{}] under [tenant:{},environment:{}]", feed.getId(), feed.getTenantId(),
-                feed.getEnvironmentId());
+        _logger.debug("Deleting feed[{}] under [tenant:{},environment:{}]", feed.getId(), feed.getPath().ids()
+                .getTenantId(),
+                feed.getPath().ids().getEnvironmentId());
         Assert.assertTrue(getHawkularClient().inventory().deleteFeed(feed).isSuccess());
     }
 
@@ -86,13 +92,11 @@ public class FeedTest extends InventoryTestBase {
 
     public static List<? extends Object> getMetrics() {
         List<Feed> feeds = new ArrayList<>();
-        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("feed1").get()));
-        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("_f").get()));
-        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
-                .feed("3feed-_").get()));
-        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed("feed-2323")
-                .get()));
-        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed("feed1").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed("_f").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed("3feed-_").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed("feed-2323").get()));
+        feeds.add(new Feed(CanonicalPath.of().tenant(TENANT.getId())
                 .feed("feed-withlooooooooooooooooooooooooooooooooongstring").get()));
         return feeds;
     }

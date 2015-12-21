@@ -19,6 +19,7 @@ package org.hawkular.qe.rest.test.wildfly;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.hawkular.client.ClientResponse;
 import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
@@ -61,7 +62,9 @@ public class WildFlyJvmTest extends WildFlyServerBase {
     public void createEnvironment() {
         //Create Environment if not available
         if (ENVIRONMENT == null) {
-            Assert.assertTrue(getHawkularClient().inventory().createEnvironment("test").isSuccess());
+            ClientResponse<String> createResponse = getHawkularClient().inventory().createEnvironment("test");
+            _logger.debug("Create Environment Response:[{}]", createResponse.toString());
+            Assert.assertTrue(createResponse.isSuccess());
             _logger.debug("Created Environment:[{}]", ENVIRONMENT);
         } else {
             _logger.debug("Environment already available:[{}]", ENVIRONMENT);
@@ -71,9 +74,11 @@ public class WildFlyJvmTest extends WildFlyServerBase {
     @Test(dependsOnMethods = { "createEnvironment" })
     public void registerFeed() {
         //Register Feed
-        FEED = new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT.getId()).feed(FEED_ID).get());
+        FEED = new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed(FEED_ID).get());
         if (getHawkularClient().inventory().getFeed(FEED).getEntity() == null) {
-            Assert.assertTrue(getHawkularClient().inventory().registerFeed(FEED).isSuccess(), "Feed creation failed");
+            ClientResponse<String> registerResponse = getHawkularClient().inventory().registerFeed(FEED);
+            _logger.debug("Register Feed Response:[{}]", registerResponse.toString());
+            Assert.assertTrue(registerResponse.isSuccess(), "Feed creation failed");
             _logger.debug("Created Feed:[{}]", FEED);
         } else {
             _logger.debug("Feed already available:[{}]", FEED);
@@ -85,9 +90,9 @@ public class WildFlyJvmTest extends WildFlyServerBase {
         //Create ResourceTypes If not available
         resourceType = getResourceType(TENANT, RESOURCE_TYPES.WILDFLY_SERVER);
         if (getHawkularClient().inventory().getResourceType(resourceType).getEntity() == null) {
-            Assert.assertTrue(getHawkularClient().inventory().createResourceType(resourceType).isSuccess(),
-                    "ResourceType["
-                            + resourceType.getId() + "] creation status");
+            ClientResponse<String> createResponse = getHawkularClient().inventory().createResourceType(resourceType);
+            _logger.debug("Create Resource Type Response:[{}]", createResponse.toString());
+            Assert.assertTrue(createResponse.isSuccess(), "ResourceType[" + resourceType.getId() + "] creation status");
             _logger.debug("Created ResourceType:[{}]", resourceType);
         } else {
             _logger.debug("ResourceType already available:[{}]", resourceType);
@@ -98,8 +103,9 @@ public class WildFlyJvmTest extends WildFlyServerBase {
     public void addResourcs() {//Add Resource if not available
         resource = getResource(TENANT, ENVIRONMENT, FEED, RESOURCE_ID, resourceType);
         if (getHawkularClient().inventory().getResource(resource).getEntity() == null) {
-            Assert.assertTrue(getHawkularClient().inventory().addResource(resource).isSuccess(), "Resource["
-                    + resource.getId() + "] creation status");
+            ClientResponse<String> addReponse = getHawkularClient().inventory().addResource(resource);
+            _logger.debug("Add Resource Response:[{}]", addReponse.toString());
+            Assert.assertTrue(addReponse.isSuccess(), "Resource[" + resource.getId() + "] creation status");
             _logger.debug("Created Resource:[{}]", resource);
         } else {
             _logger.debug("Resource already available:[{}]", resource);
@@ -112,9 +118,9 @@ public class WildFlyJvmTest extends WildFlyServerBase {
         for (METRIC_TYPES type : METRIC_TYPES.values()) {
             MetricType metricType = getMetricType(TENANT, type);
             if (getHawkularClient().inventory().getMetricType(metricType).getEntity() == null) {
-                Assert.assertTrue(getHawkularClient().inventory().createMetricType(metricType).isSuccess(),
-                        "MetricType["
-                                + metricType.getId() + "] creation status");
+                ClientResponse<String> createResponse = getHawkularClient().inventory().createMetricType(metricType);
+                _logger.debug("Create Metric Type Response:[{}]", createResponse.toString());
+                Assert.assertTrue(createResponse.isSuccess(), "MetricType[" + metricType.getId() + "] creation status");
                 _logger.debug("Created MetricType:[{}]", metricType);
             } else {
                 _logger.debug("MetricType already available:[{}]", metricType);
@@ -129,8 +135,9 @@ public class WildFlyJvmTest extends WildFlyServerBase {
             Metric metric = getMetric(TENANT, ENVIRONMENT, FEED, RESOURCE_ID, metricType);
             metrics.add(metric);
             if (getHawkularClient().inventory().getMetric(metric).getEntity() == null) {
-                Assert.assertTrue(getHawkularClient().inventory().createMetric(metric).isSuccess(), "Metric["
-                        + metric.getId() + "] creation status");
+                ClientResponse<String> createResponse = getHawkularClient().inventory().createMetric(metric);
+                _logger.debug("Create Metric Response:[{}]", createResponse.toString());
+                Assert.assertTrue(createResponse.isSuccess(), "Metric[" + metric.getId() + "] creation status");
                 _logger.debug("Created Metric:[{}]", metric);
             } else {
                 _logger.debug("Metric already available:[{}]", metric);
@@ -166,7 +173,7 @@ public class WildFlyJvmTest extends WildFlyServerBase {
         //Validate availability data
         Assert.assertTrue(AvailabilityType.fromString(getHawkularClient().metrics()
                 .getAvailabilityData(TENANT.getId(),
-                        METRICS.APP_SERVER.value(RESOURCE_ID)).get(0).getValue()) == AvailabilityType.UP);
+                        METRICS.APP_SERVER.value(RESOURCE_ID)).get(0).getValue().getText()) == AvailabilityType.UP);
 
         //long endTimestamp = startTimestamp + (DATA_DELAY * DATA_SIZE);
 

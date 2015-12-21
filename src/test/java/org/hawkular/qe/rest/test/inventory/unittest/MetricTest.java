@@ -19,6 +19,7 @@ package org.hawkular.qe.rest.test.inventory.unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hawkular.client.ClientResponse;
 import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -50,26 +51,32 @@ public class MetricTest extends InventoryTestBase {
             METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType(METRIC_TYPE_ID).get(),
                     MetricUnit.MILLISECONDS, MetricDataType.GAUGE);
         }
-        Assert.assertTrue(getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
-        Assert.assertTrue(getHawkularClient()
-                .inventory()
-                .registerFeed(
-                        new Feed(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
-                                .get())).isSuccess());
-        Assert.assertTrue(getHawkularClient().inventory().createMetricType(METRIC_TYPE).isSuccess());
+        ClientResponse<String> clientResponse = getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID);
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
+
+        clientResponse = getHawkularClient().inventory().registerFeed(
+                new Feed(CanonicalPath.of().tenant(TENANT.getId()).feed(FEED_ID).get()));
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
+
+        clientResponse = getHawkularClient().inventory().createMetricType(METRIC_TYPE);
+        _logger.debug("Client Response:[{}]", clientResponse);
+        Assert.assertTrue(clientResponse.isSuccess());
     }
 
     @AfterClass
     public void clean() {
         Assert.assertTrue(getHawkularClient().inventory().deleteMetricType(METRIC_TYPE).isSuccess());
-        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(ENVIRONMENT_ID, FEED_ID).isSuccess());
+        Assert.assertTrue(getHawkularClient().inventory().deleteFeed(FEED_ID).isSuccess());
         Assert.assertTrue(getHawkularClient().inventory().deleteEnvironment(ENVIRONMENT_ID).isSuccess());
     }
 
     @Test(dataProvider = "metricDataProvider", priority = 1)
     public void creatTest(Metric metric) {
-        _logger.debug("Creating Metric[{}] under [tenant:{},environment:{}]", metric.getId(), metric.getTenantId(),
-                metric.getEnvironmentId());
+        _logger.debug("Creating Metric[{}] under [tenant:{},environment:{}]", metric.getId(), metric.getPath().ids()
+                .getTenantId(),
+                metric.getPath().ids().getEnvironmentId());
         Assert.assertTrue(getHawkularClient().inventory().createMetric(metric).isSuccess());
     }
 
@@ -84,16 +91,18 @@ public class MetricTest extends InventoryTestBase {
 
     @Test(dataProvider = "metricDataProvider", priority = 3)
     public void getTest(Metric metric) {
-        _logger.debug("Fetching metric[{}] under [tenant:{},environment:{}]", metric.getId(), metric.getTenantId(),
-                metric.getEnvironmentId());
+        _logger.debug("Fetching metric[{}] under [tenant:{},environment:{}]", metric.getId(), metric.getPath().ids()
+                .getTenantId(),
+                metric.getPath().ids().getEnvironmentId());
         Metric metricRx = getHawkularClient().inventory().getMetric(metric).getEntity();
         assertMetrics(metricRx, metric);
     }
 
     @Test(dataProvider = "metricDataProvider", priority = 4)
     public void deleteTest(Metric metric) {
-        _logger.debug("Deleting metric[{}] under [tenant:{},environment:{}]", metric.getId(), metric.getTenantId(),
-                metric.getEnvironmentId());
+        _logger.debug("Deleting metric[{}] under [tenant:{},environment:{}]", metric.getId(), metric.getPath().ids()
+                .getTenantId(),
+                metric.getPath().ids().getEnvironmentId());
         Assert.assertTrue(getHawkularClient().inventory().deleteMetric(metric).isSuccess());
     }
 
@@ -105,15 +114,15 @@ public class MetricTest extends InventoryTestBase {
 
     public List<? extends Object> getMetrics() {
         List<Metric> metrics = new ArrayList<>();
-        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .metric("metric1").get(), METRIC_TYPE));
-        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .metric("_m").get(), METRIC_TYPE));
-        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .metric("3metric-_").get(), METRIC_TYPE));
-        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .metric("metric-2323").get(), METRIC_TYPE));
-        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID).feed(FEED_ID)
+        metrics.add(new Metric(CanonicalPath.of().tenant(TENANT.getId()).environment(ENVIRONMENT_ID)
                 .metric("metric-withlooooooooooooooooooooooooooooooooongstring").get(), METRIC_TYPE));
         return metrics;
     }
