@@ -128,9 +128,14 @@ public class AlertsTestBase extends HawkularRestTestBase {
         List<Data> numericDataList = new ArrayList<Data>();
         long firstDataTimestamp = System.currentTimeMillis() - (randomDouble.getCount() * randomDouble.getDelay());
         for (long count = 0; count < randomDouble.getCount(); count++) {
-            numericDataList.add(Data.forNumeric(randomDouble.getId(), firstDataTimestamp
+            numericDataList.add(Data.forNumeric(randomDouble.getDataId(), firstDataTimestamp
                     + (count * randomDouble.getDelay()),
                     getRandomDouble(randomDouble.getMinLimit(), randomDouble.getMaxLimit())));
+            if (randomDouble.getDataId2() != null) {
+                numericDataList.add(Data.forNumeric(randomDouble.getDataId2(), firstDataTimestamp
+                        + (count * randomDouble.getDelay()),
+                        getRandomDouble(randomDouble.getMinLimit(), randomDouble.getMaxLimit())));
+            }
         }
         return numericDataList;
     }

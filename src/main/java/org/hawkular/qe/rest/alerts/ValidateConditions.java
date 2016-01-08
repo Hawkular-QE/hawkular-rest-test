@@ -16,7 +16,11 @@
  */
 package org.hawkular.qe.rest.alerts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
+import org.hawkular.alerts.api.model.condition.CompareCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
@@ -41,6 +45,7 @@ public class ValidateConditions extends AlertsTestBase {
                     validateThresholdRangeCondition((ThresholdRangeCondition) condition, conditionsModel);
                     break;
                 case COMPARE:
+                    validateCompareCondition((CompareCondition) condition, conditionsModel);
                     break;
                 case AVAILABILITY:
                     validateAvailabilityCondition((AvailabilityCondition) condition, conditionsModel);
@@ -130,6 +135,54 @@ public class ValidateConditions extends AlertsTestBase {
                 } else if (!condition.isInRange()) {
                     conditionsModel.increaseTriggeredConditionCount(condition);
                 }
+            }
+        }
+    }
+
+    public void validateCompareCondition(CompareCondition condition, ConditionsModel conditionsModel) {
+        List<Data> data1 = new ArrayList<Data>();
+        List<Data> data2 = new ArrayList<Data>();
+        for (Data data : conditionsModel.getDatums()) {
+            if (data.getId().equals(condition.getDataId())) {
+                data1.add(data);
+            } else if (data.getId().equals(condition.getData2Id())) {
+                data2.add(data);
+            } else {
+                //This data not required for us...
+            }
+        }
+        //TODO: check data count of both id's? do we need to fail this one?? 
+        //Refer this doc: https://github.com/hawkular/hawkular-alerts/blob/master/hawkular-alerts-engine/src/
+        //main/resources/org/hawkular/alerts/engine/rules/ConditionMatch.drl
+
+        for (int index = 0; index < data1.size(); index++) {
+            switch (condition.getOperator()) {
+                case GT:
+                    if (getDouble(data1.get(index).getValue()) > (condition.getData2Multiplier() * getDouble(data2
+                            .get(index).getValue()))) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                case GTE:
+                    if (getDouble(data1.get(index).getValue()) >= (condition.getData2Multiplier() * getDouble(data2
+                            .get(index).getValue()))) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                case LT:
+                    if (getDouble(data1.get(index).getValue()) < (condition.getData2Multiplier() * getDouble(data2
+                            .get(index).getValue()))) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                case LTE:
+                    if (getDouble(data1.get(index).getValue()) <= (condition.getData2Multiplier() * getDouble(data2
+                            .get(index).getValue()))) {
+                        conditionsModel.increaseTriggeredConditionCount(condition);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

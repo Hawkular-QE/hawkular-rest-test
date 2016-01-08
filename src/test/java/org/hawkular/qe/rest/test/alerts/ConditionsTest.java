@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
+import org.hawkular.alerts.api.model.condition.CompareCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition.Operator;
@@ -152,6 +153,67 @@ public class ConditionsTest extends ValidateConditions {
         testAvailabilityCondition(
                 org.hawkular.alerts.api.model.condition.AvailabilityCondition.Operator.NOT_UP,
                 Match.ANY);
+    }
+
+    @Test(priority = 3)
+    public void testCompareConditionGT() {
+        testCompareCondition(org.hawkular.alerts.api.model.condition.CompareCondition.Operator.GT, Match.ANY);
+    }
+
+    @Test(priority = 3)
+    public void testCompareConditionGTE() {
+        testCompareCondition(org.hawkular.alerts.api.model.condition.CompareCondition.Operator.GTE, Match.ANY);
+    }
+
+    @Test(priority = 3)
+    public void testCompareConditionLT() {
+        testCompareCondition(org.hawkular.alerts.api.model.condition.CompareCondition.Operator.LT, Match.ANY);
+    }
+
+    @Test(priority = 3)
+    public void testCompareConditionLTE() {
+        testCompareCondition(org.hawkular.alerts.api.model.condition.CompareCondition.Operator.LTE, Match.ANY);
+    }
+
+    public void testCompareCondition(org.hawkular.alerts.api.model.condition.CompareCondition.Operator operator,
+            Match match) {
+        _logger.debug("Testing condition:{}", operator.toString());
+        String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
+        String dataId2 = "metric-data-id-" + getRandomId(); //MetricId also called dataId
+        String triggerId = "trigger-id-threshold-" + operator.toString() + "-" + getRandomId();
+
+        double data2Multiplier = getRandomDouble(0.0, 1.0); //load data2multiplier random
+        double valueMin = getRandomDouble(doubleMinValue, 1000.0);
+        double valueMax = getRandomDouble(valueMin, doubleMaxValue);
+
+        _logger.debug("Selected Values[Min:{}, Max:{}]", valueMin, valueMax);
+
+        Trigger trigger = new Trigger(triggerId, "CompareCondition-" + operator.toString() + "-" + getRandomId());
+        trigger.setFiringMatch(match);
+
+        //Create Trigger
+        createTrigger(trigger);
+
+        //Setup new conditions
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(new CompareCondition(triggerId, Mode.FIRING, dataId, operator, data2Multiplier, dataId2));
+
+        //Add Conditions in to trigger
+        addTriggerCondition(trigger, conditions, Mode.FIRING);
+
+        //Enable Trigger
+        trigger.setEnabled(true);
+
+        //Update Trigger
+        updateTrigger(trigger.getId(), trigger);
+
+        //Prepare data
+        RandomDouble randomDouble = new RandomDouble(TENANT.getId(), dataId, dataId2, valueMin, valueMax,
+                getRandomInteger(dataCountMin, dataCountMax), delayTime);
+        List<Data> numericDataList = getNumericData(randomDouble);
+
+        validateAndDelete(trigger, conditions, numericDataList, Match.ANY);
+
     }
 
     public void testThresholdCondition(Operator operator, Match match) {
@@ -305,7 +367,7 @@ public class ConditionsTest extends ValidateConditions {
         for (int count = 0; count < 20; count++) {
             alerts = getAlerts(alertsParams);
             if (alerts != null && !alerts.isEmpty()) {
-                if(alerts.size() == conditionsModel.getTotalTriggeredCount()){
+                if (alerts.size() == conditionsModel.getTotalTriggeredCount()) {
                     break;
                 }
             }

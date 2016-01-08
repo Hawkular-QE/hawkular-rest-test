@@ -21,20 +21,26 @@ package org.hawkular.qe.rest.model;
  */
 public class RandomDouble {
     private String tenantId;
-    private String id;
+    private String dataId;
+    private String dataId2;
     private double minLimit;
     private double maxLimit;
     private long count;
     private long delay;
 
-
     public RandomDouble() {
 
     }
 
-    public RandomDouble(String tenantId, String id, double minValue, double maxValue, long count, long delay) {
+    public RandomDouble(String tenantId, String dataId, double minValue, double maxValue, long count, long delay) {
+        this(tenantId, dataId, null, minValue, maxValue, count, delay);
+    }
+
+    public RandomDouble(String tenantId, String dataId, String dataId2, double minValue, double maxValue, long count,
+            long delay) {
         this.tenantId = tenantId;
-        this.id = id;
+        this.dataId = dataId;
+        this.dataId2 = dataId2;
         this.minLimit = minValue;
         this.maxLimit = maxValue;
         this.count = count;
@@ -44,7 +50,8 @@ public class RandomDouble {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Tenant Id:").append(this.tenantId);
-        builder.append(", Id:").append(this.id);
+        builder.append(", DataId:").append(this.dataId);
+        builder.append(", DataId2:").append(this.dataId2);
         builder.append(", Min Value:").append(this.minLimit);
         builder.append(", Max Value:").append(this.maxLimit);
         builder.append(", Count:").append(this.count);
@@ -52,12 +59,12 @@ public class RandomDouble {
         return builder.toString();
     }
 
-    public String getId() {
-        return id;
+    public String getDataId() {
+        return dataId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDataId(String id) {
+        this.dataId = id;
     }
 
     public double getMinLimit() {
@@ -98,5 +105,13 @@ public class RandomDouble {
 
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getDataId2() {
+        return dataId2;
+    }
+
+    public void setDataId2(String dataId2) {
+        this.dataId2 = dataId2;
     }
 }
