@@ -49,7 +49,7 @@ public class MetricTest extends InventoryTestBase {
     public void setup() {
         if (METRIC_TYPE == null) {
             METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT.getId()).metricType(METRIC_TYPE_ID).get(),
-                    MetricUnit.MILLISECONDS, MetricDataType.GAUGE);
+                    MetricUnit.MILLISECONDS, MetricDataType.GAUGE, MINUTE * 30);
         }
         ClientResponse<String> clientResponse = getHawkularClient().inventory().createEnvironment(ENVIRONMENT_ID);
         _logger.debug("Client Response:[{}]", clientResponse);

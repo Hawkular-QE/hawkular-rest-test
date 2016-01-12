@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -180,7 +180,7 @@ public class ConditionsTest extends ValidateConditions {
         _logger.debug("Testing condition:{}", operator.toString());
         String dataId = "metric-data-id-" + getRandomId(); //MetricId also called dataId
         String dataId2 = "metric-data-id-" + getRandomId(); //MetricId also called dataId
-        String triggerId = "trigger-id-threshold-" + operator.toString() + "-" + getRandomId();
+        String triggerId = "trigger-id-compare-condition-" + operator.toString() + "-" + getRandomId();
 
         double data2Multiplier = getRandomDouble(0.0, 1.0); //load data2multiplier random
         double valueMin = getRandomDouble(doubleMinValue, 1000.0);

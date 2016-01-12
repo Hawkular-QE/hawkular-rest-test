@@ -38,6 +38,11 @@ public class HawkularRestTestBase {
     private static HawkularClient hawkularClient = null;
     static Random random = new Random();
 
+    public static final long SECOND = 1000;
+    public static final long MINUTE = SECOND * 60;
+    public static final long HOUR = MINUTE * 60;
+    public static final long DAY = HOUR * 24;
+
     @BeforeSuite
     public void loadInitialProperties() throws URISyntaxException, Exception {
         String propertiesFile = System.getProperty("hawkular.restTest.propertiesFile");

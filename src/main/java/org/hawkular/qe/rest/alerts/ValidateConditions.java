@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -151,7 +151,7 @@ public class ValidateConditions extends AlertsTestBase {
                 //This data not required for us...
             }
         }
-        //TODO: check data count of both id's? do we need to fail this one?? 
+        //TODO: check data count of both id's? do we need to fail this one??
         //Refer this doc: https://github.com/hawkular/hawkular-alerts/blob/master/hawkular-alerts-engine/src/
         //main/resources/org/hawkular/alerts/engine/rules/ConditionMatch.drl
 

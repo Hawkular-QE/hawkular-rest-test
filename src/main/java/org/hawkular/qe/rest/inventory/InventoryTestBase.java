@@ -96,6 +96,7 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getUnit(), expected.getUnit());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
+        Assert.assertEquals(actual.getCollectionInterval(), expected.getCollectionInterval());
     }
 
     public void assertMetricTypesList(List<MetricType> actual, List<MetricType> expected) {
