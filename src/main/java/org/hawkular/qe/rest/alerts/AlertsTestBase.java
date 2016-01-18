@@ -31,6 +31,7 @@ import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.qe.rest.base.HawkularRestTestBase;
 import org.hawkular.qe.rest.model.RandomAvailability;
 import org.hawkular.qe.rest.model.RandomDouble;
+import org.hawkular.qe.rest.model.RandomString;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
@@ -160,5 +161,35 @@ public class AlertsTestBase extends HawkularRestTestBase {
             return AvailabilityType.UP;
         }
         return AvailabilityType.UNAVAILABLE;
+    }
+
+    public List<Data> getStringData(RandomString randomString) {
+        List<Data> dataList = new ArrayList<Data>();
+        long firstDataTimestamp = System.currentTimeMillis()
+                - (randomString.getCount() * randomString.getDelay());
+        StringBuilder builder = new StringBuilder();
+        for (long count = 0; count < randomString.getCount(); count++) {
+            builder.setLength(0);
+            for (int wordNo = 0; wordNo < randomString.getWords(); wordNo++) {
+                builder.append(getRandomAlphanumericString(randomString.getCount())).append(" ");
+            }
+            if (getRandomBoolean()) { //Should I include matching pattern?
+                String matchingPattern = null;
+                int caseType = getRandomInteger(0, 2);
+                if (caseType == 0) {
+                    matchingPattern = randomString.getMatchingPattern().toUpperCase();
+                } else if (caseType == 1) {
+                    matchingPattern = randomString.getMatchingPattern().toLowerCase();
+                } else {
+                    matchingPattern = randomString.getMatchingPattern();
+                }
+                builder.insert(getRandomInteger(0, builder.length()), matchingPattern);
+            }
+
+            dataList.add(new Data(randomString.getId(),
+                    firstDataTimestamp + (count * randomString.getDelay()),
+                    builder.toString()));
+        }
+        return dataList;
     }
 }

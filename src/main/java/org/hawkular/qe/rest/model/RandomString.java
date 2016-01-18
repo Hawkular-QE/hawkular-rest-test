@@ -19,20 +19,29 @@ package org.hawkular.qe.rest.model;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
-public class RandomAvailability {
+public class RandomString {
     private String tenantId;
     private String id;
-    private long count;
+    private int count;
+    private int lengthMin;
+    private int lengthMax;
+    private int words;
+    private String matchingPattern;
     private long delay;
 
-    public RandomAvailability() {
+    public RandomString() {
 
     }
 
-    public RandomAvailability(String tenantId, String id, long count, long delay) {
+    public RandomString(String tenantId, String id, int lengthMin, int lengthMax, int count, int words,
+            String matchingPattern, long delay) {
         this.tenantId = tenantId;
         this.id = id;
         this.count = count;
+        this.lengthMin = lengthMin;
+        this.lengthMax = lengthMax;
+        this.words = words;
+        this.matchingPattern = matchingPattern;
         this.delay = delay;
     }
 
@@ -53,11 +62,11 @@ public class RandomAvailability {
         this.id = id;
     }
 
-    public long getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -75,5 +84,37 @@ public class RandomAvailability {
 
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public int getLengthMin() {
+        return lengthMin;
+    }
+
+    public void setLengthMin(int lengthMin) {
+        this.lengthMin = lengthMin;
+    }
+
+    public int getLengthMax() {
+        return lengthMax;
+    }
+
+    public void setLengthMax(int lengthMax) {
+        this.lengthMax = lengthMax;
+    }
+
+    public int getWords() {
+        return words;
+    }
+
+    public void setWords(int words) {
+        this.words = words;
+    }
+
+    public String getMatchingPattern() {
+        return matchingPattern;
+    }
+
+    public void setMatchingPattern(String matchingPattern) {
+        this.matchingPattern = matchingPattern;
     }
 }

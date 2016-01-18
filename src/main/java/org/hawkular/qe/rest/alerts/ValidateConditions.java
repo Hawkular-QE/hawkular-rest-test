@@ -22,6 +22,7 @@ import java.util.List;
 import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
 import org.hawkular.alerts.api.model.condition.CompareCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
+import org.hawkular.alerts.api.model.condition.StringCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition.Operator;
@@ -51,8 +52,84 @@ public class ValidateConditions extends AlertsTestBase {
                     validateAvailabilityCondition((AvailabilityCondition) condition, conditionsModel);
                     break;
                 case STRING:
+                    validateStringCondition((StringCondition) condition, conditionsModel);
                     break;
                 case EXTERNAL:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void validateStringCondition(StringCondition condition, ConditionsModel conditionsModel) {
+        for (Data data : conditionsModel.getDatums()) {
+            switch (condition.getOperator()) {
+                case CONTAINS:
+                    if (condition.isIgnoreCase()) {
+                        if (data.getValue().toLowerCase().contains(condition.getPattern().toLowerCase())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    } else {
+                        if (data.getValue().contains(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    }
+                    break;
+                case ENDS_WITH:
+                    if (condition.isIgnoreCase()) {
+                        if (data.getValue().toLowerCase().endsWith(condition.getPattern().toLowerCase())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    } else {
+                        if (data.getValue().endsWith(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    }
+                    break;
+                case EQUAL:
+                    if (condition.isIgnoreCase()) {
+                        if (data.getValue().equalsIgnoreCase(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    } else {
+                        if (data.getValue().equals(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    }
+                    break;
+                case MATCH:
+                    if (condition.isIgnoreCase()) {
+                        if (data.getValue().toLowerCase().matches(condition.getPattern().toLowerCase())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    } else {
+                        if (data.getValue().matches(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    }
+                    break;
+                case NOT_EQUAL:
+                    if (condition.isIgnoreCase()) {
+                        if (!data.getValue().equalsIgnoreCase(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    } else {
+                        if (!data.getValue().equals(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    }
+                    break;
+                case STARTS_WITH:
+                    if (condition.isIgnoreCase()) {
+                        if (data.getValue().toLowerCase().startsWith(condition.getPattern().toLowerCase())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    } else {
+                        if (data.getValue().startsWith(condition.getPattern())) {
+                            conditionsModel.increaseTriggeredConditionCount(condition);
+                        }
+                    }
                     break;
                 default:
                     break;
