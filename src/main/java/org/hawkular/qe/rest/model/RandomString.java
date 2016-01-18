@@ -19,75 +19,54 @@ package org.hawkular.qe.rest.model;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
-public class RandomDouble {
+public class RandomString {
     private String tenantId;
-    private String dataId;
-    private String dataId2;
-    private double minLimit;
-    private double maxLimit;
-    private long count;
+    private String id;
+    private int count;
+    private int lengthMin;
+    private int lengthMax;
+    private int words;
+    private String matchingPattern;
     private long delay;
 
-    public RandomDouble() {
+    public RandomString() {
 
     }
 
-    public RandomDouble(String tenantId, String dataId, double minValue, double maxValue, long count, long delay) {
-        this(tenantId, dataId, null, minValue, maxValue, count, delay);
-    }
-
-    public RandomDouble(String tenantId, String dataId, String dataId2, double minValue, double maxValue, long count,
-            long delay) {
+    public RandomString(String tenantId, String id, int lengthMin, int lengthMax, int count, int words,
+            String matchingPattern, long delay) {
         this.tenantId = tenantId;
-        this.dataId = dataId;
-        this.dataId2 = dataId2;
-        this.minLimit = minValue;
-        this.maxLimit = maxValue;
+        this.id = id;
         this.count = count;
+        this.lengthMin = lengthMin;
+        this.lengthMax = lengthMax;
+        this.words = words;
+        this.matchingPattern = matchingPattern;
         this.delay = delay;
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Tenant Id:").append(this.tenantId);
-        builder.append(", DataId:").append(this.dataId);
-        builder.append(", DataId2:").append(this.dataId2);
-        builder.append(", Min Value:").append(this.minLimit);
-        builder.append(", Max Value:").append(this.maxLimit);
+        builder.append(", Id:").append(this.id);
         builder.append(", Count:").append(this.count);
         builder.append(", Delay:").append(this.delay);
         return builder.toString();
     }
 
-    public String getDataId() {
-        return dataId;
+    public String getId() {
+        return id;
     }
 
-    public void setDataId(String id) {
-        this.dataId = id;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public double getMinLimit() {
-        return minLimit;
-    }
-
-    public void setMinLimit(double lowValue) {
-        this.minLimit = lowValue;
-    }
-
-    public double getMaxLimit() {
-        return maxLimit;
-    }
-
-    public void setMaxLimit(double highValue) {
-        this.maxLimit = highValue;
-    }
-
-    public long getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -107,11 +86,35 @@ public class RandomDouble {
         this.tenantId = tenantId;
     }
 
-    public String getDataId2() {
-        return dataId2;
+    public int getLengthMin() {
+        return lengthMin;
     }
 
-    public void setDataId2(String dataId2) {
-        this.dataId2 = dataId2;
+    public void setLengthMin(int lengthMin) {
+        this.lengthMin = lengthMin;
+    }
+
+    public int getLengthMax() {
+        return lengthMax;
+    }
+
+    public void setLengthMax(int lengthMax) {
+        this.lengthMax = lengthMax;
+    }
+
+    public int getWords() {
+        return words;
+    }
+
+    public void setWords(int words) {
+        this.words = words;
+    }
+
+    public String getMatchingPattern() {
+        return matchingPattern;
+    }
+
+    public void setMatchingPattern(String matchingPattern) {
+        this.matchingPattern = matchingPattern;
     }
 }

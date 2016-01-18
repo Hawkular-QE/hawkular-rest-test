@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -96,6 +96,7 @@ public class InventoryTestBase extends HawkularRestTestBase {
         Assert.assertEquals(actual.getPath().ids().getTenantId(), expected.getPath().ids().getTenantId());
         Assert.assertEquals(actual.getUnit(), expected.getUnit());
         Assert.assertEquals(actual.getProperties(), expected.getProperties());
+        Assert.assertEquals(actual.getCollectionInterval(), expected.getCollectionInterval());
     }
 
     public void assertMetricTypesList(List<MetricType> actual, List<MetricType> expected) {

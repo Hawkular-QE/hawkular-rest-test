@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -147,16 +147,16 @@ public class WildFlyServerBase extends InventoryTestBase {
         HashMap<String, Object> properties = new HashMap<String, Object>();
         //properties.put("name", resourceType.getId());
         return new Resource(CanonicalPath.of().tenant(tenant.getId()).environment(environment.getId())
-               .resource(getQualifiedResourceId(resourceId)).get(), resourceType, properties);
+                .resource(getQualifiedResourceId(resourceId)).get(), resourceType, properties);
     }
 
     public static MetricType getMetricType(Tenant tenant, METRIC_TYPES type) {
         if (type.ordinal() == METRIC_TYPES.APP_SERVER.ordinal()) {
             return new MetricType(CanonicalPath.of().tenant(tenant.getId()).metricType(type.value()).get(),
-                    MetricUnit.NONE, MetricDataType.AVAILABILITY);
+                    MetricUnit.NONE, MetricDataType.AVAILABILITY, MINUTE * 30);
         } else {
             return new MetricType(CanonicalPath.of().tenant(tenant.getId()).metricType(type.value()).get(),
-                    MetricUnit.NONE, MetricDataType.GAUGE);
+                    MetricUnit.NONE, MetricDataType.GAUGE, MINUTE * 30);
         }
     }
 
