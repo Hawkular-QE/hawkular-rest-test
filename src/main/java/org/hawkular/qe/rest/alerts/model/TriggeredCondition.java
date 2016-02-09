@@ -18,6 +18,9 @@ package org.hawkular.qe.rest.alerts.model;
 
 import org.hawkular.alerts.api.model.condition.Condition;
 
+/**
+ * @author jkandasa@redhat.com (Jeeva Kandasamy)
+ */
 public class TriggeredCondition {
     private Condition condition;
     private int triggeredCount = 0;
