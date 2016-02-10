@@ -25,8 +25,8 @@ import org.hawkular.qe.rest.metrics.model.RandomDoubleData;
 import org.hawkular.qe.rest.metrics.model.TimeseriesData;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDB.LogLevel;
-import org.influxdb.dto.Serie;
 import org.influxdb.InfluxDBFactory;
+import org.influxdb.dto.Serie;
 import org.testng.Assert;
 
 /**
@@ -75,7 +75,25 @@ public class InfluxdbBase extends HawkularRestTestBase {
     }
 
     public enum FUNCTION_TYPE {
-        MIN, MAX, MEAN, SUM, COUNT, FIRST, LAST, TOP, BOTTOM;
+        MIN("min"),
+        MAX("max"),
+        MEAN("mean"),
+        SUM("sum"),
+        COUNT("count"),
+        FIRST("first"),
+        LAST("last"),
+        TOP("top"),
+        BOTTOM("bottom");
+
+        private String value;
+
+        private FUNCTION_TYPE(String value) {
+            this.value = value;
+        }
+
+        public String getText() {
+            return this.value;
+        }
 
     }
 
@@ -123,6 +141,9 @@ public class InfluxdbBase extends HawkularRestTestBase {
                         returnValue = timeseriesData.getData();
                     }
                 }
+                break;
+            case COUNT:
+                returnValue = (double) timeseriesDataList.size();
                 break;
 
             default:

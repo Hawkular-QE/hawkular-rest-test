@@ -16,10 +16,9 @@
  */
 package org.hawkular.qe.rest.metrics.model;
 
-import lombok.ToString;
-
-import lombok.Getter;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 @Builder
 @Getter
