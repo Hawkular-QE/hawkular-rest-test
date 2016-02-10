@@ -93,6 +93,10 @@ public class HawkularRestTestBase {
         return RandomStringUtils.randomAlphanumeric(count);
     }
 
+    public static String getRandomAlphanumericString() {
+        return getRandomAlphanumericString(12);
+    }
+
     public static String getRandomId() {
         return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
     }
